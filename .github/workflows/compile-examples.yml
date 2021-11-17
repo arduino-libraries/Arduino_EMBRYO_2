@@ -32,7 +32,7 @@ jobs:
 
       matrix:
         board:
-          - fqbn: arduino:samd:megaavr
+          - fqbn: arduino:megaavr:uno2018
 
     steps:
       - name: Checkout
