@@ -31,9 +31,10 @@ void setup() {
   Serial.begin(115200);       // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
   motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
-  motor.disableInterrupt();   // Use this function only with the motor outside the axis
-  motor.initWithoutHoming();  // Initialize the motor without homing procedure
-  motor.setTotalSteps(50000);  // Set the max step of the motor (necessary, because the total setp count is inicializaed with zero)
+  motor.startWithoutHoming(); // Initialize the motor without homing procedure, detached
+                              // interruptions pins and configures endstops as OUTPUT
+                              // Use this function only with the motor outside the axis
+  motor.setTotalSteps(50000); // Set the max step of the motor (necessary, because the total setp count is inicializaed with zero)
 } 
 
 void loop() {

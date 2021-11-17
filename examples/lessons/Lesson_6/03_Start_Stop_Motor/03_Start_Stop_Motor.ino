@@ -31,19 +31,21 @@ void setup() {
   Serial.begin(115200);       // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
   motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
-  motor.disableInterrupt();   // Use this function only with the motor outside the axis
-  motor.initWithoutHoming();  // Initialize the motor without homing procedure
-  Serial.println("Send any key to serial ...");
+  motor.startWithoutHoming(); // Initialize the motor without homing procedure, detached
+                              // interruptions pins and configures endstops as OUTPUT
+                              // Use this function only with the motor outside the axis
+  
+  Serial.println("To start, send any key to serial ...");
   // Without this instruction the motor will move after the upload (It is dangerous)
   while((Serial.available() <= 0)){};
   motor.setTotalSteps(50000); // Set the max step of the motor
   Serial.println("Motor moves.");
   motor.moveSteps(20000); // Motor moves
-  motor.stop();        // Disable motor
+  motor.pause();          // Pause the motor
   Serial.println("Motor does not move.");
   motor.moveSteps(50); // Motor does not move
   delay(2000);
-  motor.start();       // Enable motor
+  motor.play();       // Enable motor
   Serial.println("Motor moves.");
   motor.moveSteps(-15000); // Motor moves again
 }

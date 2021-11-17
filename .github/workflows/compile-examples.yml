@@ -32,7 +32,7 @@ jobs:
 
       matrix:
         board:
-          - fqbn: arduino:megaavr:uno2018
+          - fqbn: arduino:samd:mkrwifi1010
 
     steps:
       - name: Checkout

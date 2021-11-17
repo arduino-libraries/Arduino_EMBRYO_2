@@ -2,7 +2,7 @@
 
 ## Methods
 
-### `StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnInit, uint8_t btnEmergencyStop)`
+### `StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t forwardPin, uint8_t backwardPin, uint8_t startPin, uint8_t emergencyStopPin)`
 
 Attaches the motor and controls buttons to the pins.
 
@@ -11,13 +11,13 @@ Attaches the motor and controls buttons to the pins.
 ```
 StepMotor axis(AXIS_ID,
                enablePin,
-               DirectionPin,
-               PulsePin,
-               HomeEndstop,
-               FarEndstop,
-               ForwardPin,
-               BackwardPin,
-               initPin,
+               directionPin,
+               pulsePin,
+               homePin,
+               farPin,
+               forwardPin,
+               backwardPin,
+               startPin,
                emergencyStopPin);
 ```
 
@@ -25,13 +25,13 @@ StepMotor axis(AXIS_ID,
 
 -   AXIS_ID: motor unique ID (numeric)
 -   enablePin: Pin connected to motor enable pin
--   DirectionPin: Pin connected to motor direction pin
--   PulsePin: Pin connected to motor pulse pin
--   HomeEndstop: Pin connected to home position endstop switch
--   FarEndstop: Pin connected to far from home endstop switch
--   ForwardPin: Pin connected to forward button
--   BackwardPin: Pin connected to backward button
--   initPin: Pin connected to initialization button
+-   directionPin: Pin connected to motor direction pin
+-   pulsePin: Pin connected to motor pulse pin
+-   homePin: Pin connected to home position endstop switch
+-   farPin: Pin connected to far from home endstop switch
+-   forwardPin: Pin connected to forward button
+-   backwardPin: Pin connected to backward button
+-   startPin: Pin connected to initialization button
 -   emergencyStopPin: Pin connected to emergency stop button
 
 #### Example
@@ -49,12 +49,13 @@ void loop() {}
 #### See also
 
 -   [begin()](#begin)
+-   [start()](#start)
 -   [checkInputs()](#checkInputs)
 -   [end()](#end)
 
 ### `begin()`
 
-Configures inputs pins, outputs pins and interuptions pins, and sets serial communication with baud rate 115200bps.
+Configures inputs pins, outputs pins and interuptions pins.
 
 #### Syntax
 
@@ -72,7 +73,7 @@ StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 void setup() {
   Serial.begin(115200);
   while (!Serial) {};
-  axis.begin();
+  axis.begin();   // Configure inputs pins, outputs pins and interuptions pins
 }
 void loop() {}
 ```
@@ -80,20 +81,21 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
+-   [play()](#play)
+-   [pause()](#pause)
+-   [prepareInterrupt()](#prepareInterrupt)
 -   [start()](#start)
--   [stop()](#stop)
 
-### `init()`
+### `start()`
 
 Initializes the motor.
 
-Enables and starts the motor, then the motor is setted as ready. If the function receives true or nothing as argument, it does the homing procedure, otherwise it does not. This function is associated with the Init Button ISR.
+Enables and starts the motor, then the motor is setted as ready and does the homing procedure. This function is associated with the Start Button ISR.
 
 #### Syntax
 
 ```
-axis.init()
+axis.start()
 ```
 
 #### Example
@@ -107,8 +109,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);  // Initialize motor without homing procedure
-  axis.homing();     // Does the home procedure
+  axis.start();  // Initialize motor and run the homing procedure
 }
 void loop() {}
 ```
@@ -117,9 +118,49 @@ void loop() {}
 
 -   [end()](#end)
 -   [homing()](#homing)
+-   [pause()](#pause)
+-   [play()](#play)
+-   [ready()](#ready)
+-   [startWithoutHoming()](#startWithoutHoming)
+
+### `startWithoutHoming()`
+
+Initializes the motor.
+
+Enables and starts the motor, then the motor is setted as ready but it doesn't run the homing procedure. Use this function only with the motor outside the axis.
+
+#### Syntax
+
+```
+axis.startWithoutHoming()
+```
+
+#### Example
+
+```
+#include <Embryo_II.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+  axis.begin();
+  axis.startWithoutHoming();  // Initialize motor without homing procedure
+  axis.homing();              // Run the home procedure
+}
+void loop() {}
+```
+
+#### See also
+
+-   [end()](#end)
+-   [homing()](#homing)
+-   [play()](#play)
+-   [pause()](#pause)
 -   [ready()](#ready)
 -   [start()](#start)
--   [stop()](#start)
+-   [terminateInterrupt()](#terminateInterrupt)
 
 ### `end()`
 
@@ -142,7 +183,7 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   axis.end();
 }
 void loop() {}
@@ -150,19 +191,19 @@ void loop() {}
 
 #### See also
 
--   [init()](#init)
+-   [play()](#play)
+-   [pause()](#pause)
 -   [ready()](#ready)
 -   [start()](#start)
--   [stop()](#stop)
 
-### `start()`
+### `play()`
 
 Enables the motor if the motor is initialized.
 
 #### Syntax
 
 ```
-axis.start()
+axis.play()
 ```
 
 #### Example
@@ -176,14 +217,14 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   delay(500);
-  axis.moveSteps(50); // Motor moves
-  axis.stop();        // Disable motor
-  axis.moveSteps(50); // Motor does not move
+  axis.moveSteps(50);  // Motor moves
+  axis.pause();        // Disable motor
+  axis.moveSteps(50);  // Motor does not move
   delay(500);
-  axis.start();       // Enable motor
-  axis.moveSteps(50); // Motor moves again
+  axis.play();         // Enable motor
+  axis.moveSteps(50);  // Motor moves again
 }
 void loop() {}
 ```
@@ -191,18 +232,18 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [moveSteps()](#moveSteps)
--   [stop()](#stop)
+-   [pause()](#pause)
+-   [start()](#start)
 
-### `stop()`
+### `pause()`
 
 Disables the motor.
 
 #### Syntax
 
 ```
-axis.stop()
+axis.pause()
 ```
 
 #### Example
@@ -216,14 +257,14 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   delay(500);
-  axis.moveSteps(50); // Motor moves
-  axis.stop();        // Disable motor
-  axis.moveSteps(50); // Motor does not move
+  axis.moveSteps(50);  // Motor moves
+  axis.pause();        // Disable motor
+  axis.moveSteps(50);  // Motor does not move
   delay(500);
-  axis.start();       // Enable motor
-  axis.moveSteps(50); // Motor moves again
+  axis.play();         // Enable motor
+  axis.moveSteps(50);  // Motor moves again
 }
 void loop() {}
 ```
@@ -231,8 +272,8 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [moveSteps()](#moveSteps)
+-   [play()](#play)
 -   [start()](#start)
 
 ### `homing()`
@@ -256,8 +297,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);  // Initialize motor without homing procedure
-  axis.homing();     // Does the home procedure
+  axis.startWithoutHoming();  // Initialize motor without homing procedure
+  axis.homing();              // Run the home procedure
 }
 void loop() {}
 ```
@@ -265,14 +306,14 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [readEndstopFar()](#readEndstopFar)
 -   [readEndstopHome()](#readEndstopHome)
--   [start()](#stop)
+-   [start()](#start)
+-   [startWithoutHoming()](#startWithoutHoming)
 
 ### `ready()`
 
-Executes the homing procedure, but it doesn't set the motor as ready.
+Returns a boolean value that indicates if the motor is ready.
 
 #### Syntax
 
@@ -291,8 +332,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready());  // Wait for Start button to be pressed
+                         // The start button is attached to the interrupt
+                         // service routine that enables the motor and runs
+                         // the homing procedure
   axis.moveSteps(50);    // Motor 50 steps
 }
 void loop() {}
@@ -302,8 +346,80 @@ void loop() {}
 
 -   [begin()](#begin)
 -   [end()](#end)
--   [init()](#init)
 -   [moveStep()](#moveStep)
+-   [start()](#start)
+
+### `prepareInterrupt()`
+
+Attaches to interrupt pins of the start and emergency stop buttons.
+
+#### Syntax
+
+```
+axis.prepareInterrupt()
+```
+
+#### Example
+
+```
+#include <Embryo_II.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+  axis.begin();
+  terminateInterrupt();  // Detach the interrupt pins
+  prepareInterrupt();  // Attach the interrupt pins
+}
+void loop() {
+  if(axis.readBtnForward()) axis.moveForward();
+  if(axis.readBtnBackward()) axis.moveBackward();
+}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [prepareInterrupt()](#prepareInterrupt)
+-   [teminateInterrupt()](#teminateInterrupt)
+
+### `terminateInterrupt()`
+
+Detaches to interrupt pins of the start and emergency stop buttons.
+
+#### Syntax
+
+```
+axis.terminateInterrupt()
+```
+
+#### Example
+
+```
+#include <Embryo_II.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+  axis.begin();
+  terminateInterrupt();  // Detach the interrupt pins
+  prepareInterrupt();  // Attach the interrupt pins
+}
+void loop() {
+  if(axis.readBtnForward()) axis.moveForward();
+  if(axis.readBtnBackward()) axis.moveBackward();
+}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [prepareInterrupt()](#prepareInterrupt)
+-   [teminateInterrupt()](#teminateInterrupt)
 
 ### `moveForward()`
 
@@ -364,8 +480,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -402,8 +518,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveSteps(50);
@@ -418,7 +534,7 @@ void loop() {
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnForward()](#readBtnForward)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `moveDistance()`
 
@@ -441,8 +557,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveDistance(5);
@@ -456,16 +572,16 @@ void loop() {
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnForward()](#readBtnForward)
 -   [ready()](#ready)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
-### `setStep()`
+### `toStep()`
 
 Moves the robot carriage to a specified step count. Zero is the motor home position and max number of steps is the axis end far from the motor home.
 
 #### Syntax
 
 ```
-axis.setStep(step)
+axis.toStep(step)
 ```
 
 #### Example
@@ -479,11 +595,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
   Serial.println("Current step: " + String(axis.getStep()));
   delay(1000);
-  axis.setStep(1000);
+  axis.toStep(1000);
   Serial.println("Current step: " + String(axis.getStep()));
 }
 void loop() {}
@@ -494,16 +610,16 @@ void loop() {}
 -   [getStep()](#getStep)
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
-### `setPosition()`
+### `toPosition()`
 
 Moves the robot carriage to a specified position in centimeters along the robot axis. Zero is the motor home position and max position is in the axis end far from the motor home and is equal to the length of the axis.
 
 #### Syntax
 
 ```
-axis.setPosition(position)
+axis.toPosition(position)
 ```
 
 #### Example
@@ -517,11 +633,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
   Serial.println("Intial position: " + String(axis.getPosition()));
   delay(1000);
-  axis.setPosition(15);
+  axis.toPosition(15);
   Serial.println("Final position: " + String(axis.getPosition()));
 }
 void loop() {}
@@ -533,7 +649,7 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [ready()](#ready)
 -   [setLength()](#setLength)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `setSpeed()`
 
@@ -556,11 +672,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);     // Initialize without homing
-  axis.setSpeed(7000);  // The motor moves slower
+  axis.startWithoutHomming();  // Initialize the motor without homing procedure
+  axis.setSpeed(7000); // The motor moves slower
   for (int i = 0; i < 20000; i++)axis.moveForward();
   delay(1000);
-  axis.setSpeed();      // The motor moves in the default speed
+  axis.setSpeed(); // The motor moves in the default speed, 200 milliseconds
   for (int i = 0; i < 20000; i++)axis.moveBackward();
   delay(1000);
   axis.stop();
@@ -574,7 +690,7 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `getStep()`
 
@@ -597,11 +713,11 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
   Serial.println("Current step: " + String(axis.getStep()));
   delay(1000);
-  axis.setStep(1000);
+  axis.toStep(1000);
   Serial.println("Current step: " + String(axis.getStep()));
 }
 void loop() {}
@@ -611,7 +727,7 @@ void loop() {}
 
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `getPosition()`
 
@@ -634,8 +750,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for start button to be pressed
   delay(1000);
   Serial.println("Intial position: " + String(axis.getPosition()));
   delay(1000);
@@ -651,7 +767,7 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [ready()](#ready)
 -   [setLength()](#setLength)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
 ### `readBtnForward()`
 
@@ -674,8 +790,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -710,8 +826,8 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -725,14 +841,14 @@ void loop() {
 -   [moveForward()](#moveForward)
 -   [readBtnForward()](#readBtnForward)
 
-### `readBtnInit()`
+### `readBtnStart()`
 
-Returns the boolean value in the pin connected to the Init Button. This button invokes the initialization ISR and the init() method.
+Returns the boolean value in the pin connected to the Start Button. This button invokes the initialization ISR and the start() method.
 
 #### Syntax
 
 ```
-axis.readBtnInit()
+axis.readBtnStart()
 ```
 
 #### Example
@@ -746,16 +862,16 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Init button logic");
-  Serial.println("Not pressed: " + String(axis.readBtnInit()));
-  Serial.println("Pressed: " + String(!axis.readBtnInit()));
+  Serial.println("Start button logic");
+  Serial.println("Not pressed: " + String(axis.readBtnStart()));
+  Serial.println("Pressed: " + String(!axis.readBtnStart()));
 }
 void loop() {}
 ```
 
 #### See also
 
--   [init()](#init)
+-   [start()](#start)
 -   [ready()](#ready)
 
 ### `readBtnEmergencyStop()`
@@ -987,6 +1103,6 @@ void loop() {}
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnEmergencyStop()](#readBtnEmergencyStop)
 -   [readBtnForward()](#readBtnForward)
--   [readBtnInit()](#readBtnInit)
+-   [readBtnStart()](#readBtnStart)
 -   [readEndstopFar()](#readEndstopFar)
 -   [readEndstopHome()](#readEndstopHome)
