@@ -5,13 +5,13 @@
 #define MAX_SPEED   200
 
 /*C O N S T A N T S   A N D   V A R I A B L E S*/
-const int enablePin = A5;       // Enable Pin
+const int enablePin = A5;      // Enable Pin
 const int DirPin = 5;          // Direction Pin X-axis
 const int PulPin = 6;          // Step Pin X-axis
 const int BackwardPin = A1;    // Backward Button X-axis
 const int ForwardPin  = A2;    // Forward Button X-axis
-const int initPin = 2;         // Init Button
-const int emergencyPin  = 12;  // Emergency Button
+const int startPin = 2;        // Start Button
+const int emergencyPin  = 12;  // Emergency Stop Button
 const int HomeEndstop = 3;     // Home endstop X-axis
 const int FarEndstop = 4;      // Far From Home endstop X-axis
 long steps = 0;
@@ -19,7 +19,7 @@ long steps = 0;
 int analogPin = A0;            // Potentiometer pin
 int speedMotor = 200;          // Intial speed (Max speed = 200 and Min speed = 25000)
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Init Button, Emergency)
+// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor motor(X_AXIS,
                 enablePin,
                 DirPin,
@@ -28,7 +28,7 @@ StepMotor motor(X_AXIS,
                 FarEndstop,
                 ForwardPin,
                 BackwardPin,
-                initPin,
+                startPin,
                 emergencyPin);
 
 void setup() {

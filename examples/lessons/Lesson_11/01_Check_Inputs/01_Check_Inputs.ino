@@ -8,13 +8,12 @@ const int DirPin = 5;          // Direction Pin X-axis
 const int PulPin = 6;          // Step Pin X-axis
 const int BackwardPin = A1;    // Backward Button X-axis
 const int ForwardPin  = A2;    // Forward Button X-axis
-const int initPin = 2;         // Init Button
-const int emergencyPin  = 12;  // Emergency Button
+const int startPin = 2;        // Start Button
+const int emergencyPin  = 12;  // Emergency Stop Button
 const int HomeEndstop = 3;     // Home endstop X-axis
 const int FarEndstop = 4;      // Far From Home endstop X-axis
-long steps = 0;
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Init Button, Emergency)
+// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axis(X_AXIS,
                 enablePin,
                 DirPin,
@@ -23,7 +22,7 @@ StepMotor axis(X_AXIS,
                 FarEndstop,
                 ForwardPin,
                 BackwardPin,
-                initPin,
+                startPin,
                 emergencyPin);
 
 void setup() {
@@ -49,6 +48,4 @@ void loop() {
     // The emergency stop buuton is attached in the interrupt service routine
     // So when you clik the button, you will the Emergency message will be printed too
     Serial.println("Emergency Stop Button was pressed!");
-  if(axis.readBtnInit() == 1)
-    Serial.println("Init Button was pressed!");
 }

@@ -107,6 +107,8 @@ bool StepMotor::homing(void){
   } 
   Serial.println("Axis " + String (_id) + " - Endstop Home was found.");
   Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
+  _totalSteps /= 2;
+  Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
 
   _currentStep = 0;
   _homingOK = true;
@@ -285,17 +287,17 @@ void StepMotor::checkInputs(void){
   
   Serial.println("In common inputs:");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("|\t\tForward Button\t| Backward Button | Start Button\t| Emergency Button |");
-  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnStart()) + "\t|\t " + String(readBtnEmergencyStop()) + "\t   |");
-  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnStart()) + "\t|\t " + String(!readBtnEmergencyStop()) + "\t   |");
+  Serial.println("|\t\tForward Button\t| Backward Button | Start Button | Emergency Button |");
+  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnStart()) + "\t |\t " + String(readBtnEmergencyStop()) + "\t   |");
+  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnStart()) + "\t |\t " + String(!readBtnEmergencyStop()) + "\t   |");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("Press Enter to continue ...");
+  Serial.println("Send any key to continue ...");
   uint8_t _currentForwardPress = !readBtnForward();
   uint8_t _currentBackwardPress = !readBtnBackward();
-  uint8_t _key = '0';
+  uint8_t _key = ' ';
   do{
-    Serial.available() > 0 ? _key = Serial.read() : _key = '0';
-  }while(_key != '\n');
+    Serial.available() > 0 ? _key = Serial.read() : _key = ' ';
+  }while(_key == ' ');
   Serial.println("==============================");
   if(_currentHomePress != _defaultHomePress){
     Serial.println("The boolean values of ENDSTOP HOME are different from the expected values.");
