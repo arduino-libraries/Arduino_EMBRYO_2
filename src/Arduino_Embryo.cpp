@@ -20,7 +20,7 @@
 // Interrupt
 StepMotor* StepMotor::_thisMotor = 0;
 
-StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnInit, uint8_t btnEmergencyStop)
+StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnStart, uint8_t btnEmergencyStop)
 {
   /* Identification */
   _id = id;
@@ -29,7 +29,7 @@ StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_
   _btnBackward = btnBackward;
   _endstopHome = homePin;
   _endstopFar = farPin;
-  _btnInit = btnInit;
+  _btnStart = btnStart;
   _btnEmergencyStop = btnEmergencyStop;
   /* Outputs */
   _enable_pin = enablePin;
@@ -41,7 +41,7 @@ StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_
 }
 
 void StepMotor::begin(void){
-  uint8_t _inputPins[6] = {_btnForward, _btnBackward, _btnInit, _btnEmergencyStop, _endstopHome, _endstopFar};
+  uint8_t _inputPins[6] = {_btnForward, _btnBackward, _btnStart, _btnEmergencyStop, _endstopHome, _endstopFar};
   uint8_t _outputPins[3] = {_enable_pin, _direction_pin, _pulse_pin};
   uint8_t _numPinsInput = sizeof(_inputPins) / sizeof(_inputPins[0]);
   uint8_t _numPinsOutput = sizeof(_outputPins) / sizeof(_outputPins[0]);
@@ -55,21 +55,23 @@ void StepMotor::begin(void){
   disableMotor();
 
   //Configure Interruptions
-  attachInterrupt(digitalPinToInterrupt(_btnInit), initISR, RISING);
-  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), stopISR, RISING);
+  prepareInterrupt();
 
   Serial.println("Motor " + String(_id) + " is ON!");
 }
 
-void StepMotor::init(void){
+void StepMotor::start(void){
   _ready = true;
-  start();
+  play();
   _ready = homing();
 }
 
-void StepMotor::initWithoutHoming(void){
+void StepMotor::startWithoutHoming(void){
+  terminateInterrupt();
+  pinMode(_endstopHome, OUTPUT);
+  pinMode(_endstopFar, OUTPUT);
   _ready = true;
-  start();
+  play();
 }
 
 void StepMotor::end(void){
@@ -79,12 +81,12 @@ void StepMotor::end(void){
 }
 
 
-void StepMotor::start(void){
+void StepMotor::play(void){
   if(!_ready)  Serial.println("Motor is not initialized");
   else enableMotor();
 }
 
-void StepMotor::stop(void){
+void StepMotor::pause(void){
   disableMotor();
 }
 
@@ -105,6 +107,8 @@ bool StepMotor::homing(void){
   } 
   Serial.println("Axis " + String (_id) + " - Endstop Home was found.");
   Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
+  _totalSteps /= 2;
+  Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
 
   _currentStep = 0;
   _homingOK = true;
@@ -115,22 +119,22 @@ bool StepMotor::ready(void) const{
   return _ready;
 }
 
-void StepMotor::enableInterrupt(void){
-  attachInterrupt(digitalPinToInterrupt(_btnInit), initISR, RISING);
-  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), stopISR, RISING);
+void StepMotor::prepareInterrupt(void){
+  attachInterrupt(digitalPinToInterrupt(_btnStart), startISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), endISR, RISING);
 }
 
-void StepMotor::disableInterrupt(void){
+void StepMotor::terminateInterrupt(void){
   detachInterrupt(digitalPinToInterrupt(_btnEmergencyStop));
-  detachInterrupt(digitalPinToInterrupt(_btnInit));
+  detachInterrupt(digitalPinToInterrupt(_btnStart));
 }
 
-void StepMotor::initISR(void){
+void StepMotor::startISR(void){
   if(_thisMotor != 0)
-    _thisMotor->init();
+    _thisMotor->start();
 }
 
-void StepMotor::stopISR(void){
+void StepMotor::endISR(void){
   Serial.println("Emergency!");
     _thisMotor->end();
 }
@@ -192,15 +196,15 @@ void StepMotor::moveDistance(int32_t distance){
   moveSteps(_step);
 }
 
-void StepMotor::setStep(int32_t step){
+void StepMotor::toStep(int32_t step){
   if (step >= 0 && step <= _totalSteps) {
     moveSteps(step - _currentStep); 
   } else Serial.println("Value is out of range!");
 }
 
-void StepMotor::setPosition(int32_t position){
+void StepMotor::toPosition(int32_t position){
   uint32_t _step = map(position, 0, _maxLength, 0, _totalSteps);
-  setStep(_step);
+  toStep(_step);
 }
 
 void StepMotor::setSpeed(int32_t speed = 200){
@@ -234,8 +238,8 @@ bool StepMotor::readBtnBackward(void){
   return digitalRead(_btnBackward);
 }
 
-bool StepMotor::readBtnInit(void){
-  return digitalRead(_btnInit);
+bool StepMotor::readBtnStart(void){
+  return digitalRead(_btnStart);
 }
 
 bool StepMotor::readBtnEmergencyStop(void){
@@ -283,17 +287,17 @@ void StepMotor::checkInputs(void){
   
   Serial.println("In common inputs:");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("|\t\tForward Button\t| Backward Button | Init Button\t| Emergency Button |");
-  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnInit()) + "\t|\t " + String(readBtnEmergencyStop()) + "\t   |");
-  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnInit()) + "\t|\t " + String(!readBtnEmergencyStop()) + "\t   |");
+  Serial.println("|\t\tForward Button\t| Backward Button | Start Button | Emergency Button |");
+  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnStart()) + "\t |\t " + String(readBtnEmergencyStop()) + "\t   |");
+  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnStart()) + "\t |\t " + String(!readBtnEmergencyStop()) + "\t   |");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("Press Enter to continue ...");
+  Serial.println("Send any key to continue ...");
   uint8_t _currentForwardPress = !readBtnForward();
   uint8_t _currentBackwardPress = !readBtnBackward();
-  uint8_t _key = '0';
+  uint8_t _key = ' ';
   do{
-    Serial.available() > 0 ? _key = Serial.read() : _key = '0';
-  }while(_key != '\n');
+    Serial.available() > 0 ? _key = Serial.read() : _key = ' ';
+  }while(_key == ' ');
   Serial.println("==============================");
   if(_currentHomePress != _defaultHomePress){
     Serial.println("The boolean values of ENDSTOP HOME are different from the expected values.");

@@ -15,33 +15,33 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _Arduino_Embryo_h
-#define _Arduino_Embryo_h
+#ifndef _Embryo_II_h
+#define _Embryo_II_h
 
 #include "Arduino.h"
 
 class StepMotor {
  public:
-  StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnInit, uint8_t btnEmergencyStop);
+  StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnStart, uint8_t btnEmergencyStop);
 
   // Control motor
   void begin(void);
-  void init(void);
-  void initWithoutHoming(void);
-  void end(void);
   void start(void);
-  void stop(void);
+  void startWithoutHoming(void);
+  void end(void);
+  void play(void);
+  void pause(void);
   bool homing(void);
   bool ready(void) const;
-  void enableInterrupt(void);
-  void disableInterrupt(void);
+  void prepareInterrupt(void);
+  void terminateInterrupt(void);
   // Machine movement and commands
   void moveForward(void);
   void moveBackward(void);
   void moveSteps(int32_t numSteps);
   void moveDistance(int32_t distance);
-  void setStep(int32_t step);
-  void setPosition(int32_t position);
+  void toStep(int32_t step);
+  void toPosition(int32_t position);
   void setSpeed(int32_t speed = 200);
   uint32_t getStep(void);
   uint32_t getPosition(void);
@@ -50,7 +50,7 @@ class StepMotor {
   bool readBtnBackward(void);
   bool readEndstopHome(void);
   bool readEndstopFar(void);
-  bool readBtnInit(void);
+  bool readBtnStart(void);
   bool readBtnEmergencyStop(void);
   void checkInputs(void);
   // Set and Read steps
@@ -67,7 +67,7 @@ private:
   uint8_t _btnBackward;
   uint8_t _endstopHome;
   uint8_t _endstopFar;
-  uint8_t _btnInit;
+  uint8_t _btnStart;
   uint8_t _btnEmergencyStop;
   /* Outputs */
   uint8_t _enable_pin;
@@ -100,8 +100,8 @@ private:
   void setFarDirection(void);
   // Interrupt
   static StepMotor* _thisMotor;
-  static void initISR(void);
-  static void stopISR(void);
+  static void startISR(void);
+  static void endISR(void);
 };
 
 
