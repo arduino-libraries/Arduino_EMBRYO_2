@@ -19,6 +19,7 @@
 #define _Embryo_II_h
 
 #include "Arduino.h"
+#include "Math.h"
 
 class StepMotor {
  public:
@@ -104,5 +105,31 @@ private:
   static void endISR(void);
 };
 
+class Embryo {
+  public:
+    Embryo(StepMotor axisX, StepMotor axisY);
+
+  void begin(void);
+  void start(void);
+  void toPositionXY(uint8_t positionX, uint8_t positionY);
+  void toStepXY(uint32_t stepX, uint32_t stepY);
+  void drawLine(uint8_t initialPositionX,
+                uint8_t initialPositionY,
+                uint8_t finalPositionX,
+                uint8_t finalPositionY);
+  void drawCircle(uint8_t centerX,
+                uint8_t centerY,
+                uint8_t radius);
+
+  void drawArk(uint8_t centerX,
+                uint8_t centerY,
+                uint8_t radius,
+                float initialAngle,
+                float finalAngle);
+
+  private:
+    StepMotor *_axisX;
+    StepMotor *_axisY;
+};
 
 #endif

@@ -316,3 +316,73 @@ void StepMotor::checkInputs(void){
     Serial.println("Your robot won't work properly :( ");
   } else Serial.println("BACKWARD BUTTON is OK.");
 }
+
+Embryo::Embryo(StepMotor axisX, StepMotor axisY)
+{
+  _axisX = &axisX;
+  _axisY = &axisY;
+}
+
+void Embryo::begin(){
+  _axisX->begin();
+  _axisY->begin();
+  
+}
+
+void Embryo::start(){
+  _axisX->start();
+  _axisY->start();
+}
+
+void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
+  uint8_t _positionX = positionX;
+  uint8_t _positionY = positionY;
+  _axisX->toPosition(_positionX);
+  _axisX->toPosition(_positionY);
+}
+
+void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
+  uint32_t _stepX = stepX;
+  uint32_t _stepY = stepY;
+  _axisX->toPosition(_stepX);
+  _axisY->toPosition(_stepY);
+}
+
+void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_t finalPositionX, uint8_t finalPositionY){
+  uint8_t _initialPositionX = initialPositionX;
+  uint8_t _initialPositionY = initialPositionY;
+  uint8_t _finalPositionX = finalPositionX;
+  uint8_t _finalPositionY = finalPositionY;
+  _axisX->toPosition(_initialPositionX);
+  _axisY->toPosition(_initialPositionY);
+  double _m = (_finalPositionY - _initialPositionY)/(_finalPositionX - _initialPositionX);
+  for(int _i = _initialPositionX; _i<= _finalPositionX; _i++){
+    double _y = _m*(_i - _initialPositionX) + _initialPositionY;
+    _axisX->toPosition(_i);
+    _axisY->toPosition(_y);
+  }
+}
+
+void Embryo::drawCircle(uint8_t centerX, uint8_t centerY, uint8_t radius){
+  uint8_t _radius = radius;
+  uint8_t _centerX = centerX;
+  uint8_t _centerY = centerY;
+  drawArk(_centerX, _centerY, _radius, 0, 360);
+}
+
+void Embryo::drawArk(uint8_t centerX, uint8_t centerY, uint8_t radius, float initialAngle, float finalAngle){
+  uint8_t _radius = radius;
+  uint8_t _centerX = centerX;
+  uint8_t _centerY = centerY;
+  uint8_t _initialAngle = initialAngle;
+  uint8_t _finalAngle = finalAngle;
+  _axisX->toPosition(_centerX + _radius);
+  _axisY->toPosition(_centerY);
+  for(int _i = _initialAngle; _i<= _finalAngle; _i++){
+    double _radians = (3.14159*_i)/180.0;
+    double _x = radius*cos(_radians) + _centerX;
+    double _y = radius*sin(_radians) + _centerY;
+    _axisX->toPosition(_x);
+    _axisY->toPosition(_y);
+  }
+}
