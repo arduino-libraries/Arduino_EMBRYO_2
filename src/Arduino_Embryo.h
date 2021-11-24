@@ -74,7 +74,7 @@ private:
   uint8_t _enable_pin;
   uint8_t _direction_pin;
   uint8_t _pulse_pin;
-  /* Defaul Structure Values */
+  /* Default Structure Values */
   byte _homeDir = HIGH;    // Set home direction
   byte _farDir = LOW;      // Set far from home direction
   bool _homingOK = false;  // Flag control

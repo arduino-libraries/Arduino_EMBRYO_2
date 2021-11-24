@@ -92,12 +92,14 @@ void StepMotor::pause(void){
 
 bool StepMotor::homing(void){
   Serial.println ("Homing axis " + String(_id));
-//  enableMotor();
+  _totalSteps = 0;
   setFarDirection();
   while(!readEndstopFar()){
     pulseMotor();
+    _totalSteps++;
   }
   Serial.println("Axis " + String (_id) + " - Endstop Far was found.");
+  Serial.println("Axis " + String(_id) + " - Total steps - 1st time = " + String(_totalSteps));
   _totalSteps = 0;
 
   setHomeDirection();
@@ -106,7 +108,7 @@ bool StepMotor::homing(void){
     _totalSteps++;
   } 
   Serial.println("Axis " + String (_id) + " - Endstop Home was found.");
-  Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
+  Serial.println("Axis " + String(_id) + " - Total steps - 2nd time = " + String(_totalSteps));
   _totalSteps /= 2;
   Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
 
@@ -200,6 +202,7 @@ void StepMotor::toStep(int32_t step){
   if (step >= 0 && step <= _totalSteps) {
     moveSteps(step - _currentStep); 
   } else Serial.println("Value is out of range!");
+  if(step == 0) _currentStep = 0;
 }
 
 void StepMotor::toPosition(int32_t position){
