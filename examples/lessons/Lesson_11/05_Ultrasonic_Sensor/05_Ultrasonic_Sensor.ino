@@ -3,7 +3,7 @@
 #define X_AXIS      1
 #define echoPin  9 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define trigPin 10 // attach pin D3 Arduino to pin Trig of HC-SR04
-#define motorOffset 10 // Offset of the sensor and the motor home position
+#define motorOffset 5 // Offset of the sensor and the motor home position
 
 /*C O N S T A N T S   A N D   V A R I A B L E S*/
 const int enablePin = A5;      // Enable Pin
