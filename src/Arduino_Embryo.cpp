@@ -387,7 +387,7 @@ void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
   uint8_t _positionX = positionX;
   uint8_t _positionY = positionY;
   _axisX->toPosition(_positionX);
-  _axisX->toPosition(_positionY);
+  _axisY->toPosition(_positionY);
 }
 
 void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
