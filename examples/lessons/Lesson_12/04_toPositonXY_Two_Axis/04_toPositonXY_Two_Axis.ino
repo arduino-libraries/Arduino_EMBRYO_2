@@ -22,7 +22,7 @@ const int ForwardPinY  = A4;   // Forward Button Y-axis
 const int startPin = 2;        // Start Button
 const int emergencyPin  = 12;  // Emergency Button
 
-unsigned long stepNumX = 0, stepNumY = 0;
+unsigned int positionX = 0, positionY = 0;
 
 // Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axisX(X_AXIS,
@@ -58,18 +58,19 @@ void setup() {
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+  Serial.println("Move the axis between to minimum position 0cm and the maximum position 45cm");
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println("Enter the number of the step for X-axis: ");
+  Serial.println("Enter the number of the position for X-axis: ");
   while((Serial.available() <= 0)){};
-  stepNumX = Serial.parseInt();
-  Serial.println("Enter the number of the step for Y-axis: ");
+  positionX = Serial.parseInt();
+  Serial.println("Enter the number of the position for Y-axis: ");
   while((Serial.available() <= 0)){};
-  stepNumY = Serial.parseInt();
-  Serial.println("Current step before - X-axis: " + String(axisX.getStep()));
-  Serial.println("Current step before - Y-axis: " + String(axisY.getStep()));
-  robot.toStepXY(stepNumX, stepNumY);
-  Serial.println("Current steps after - X-axis: " + String(axisX.getStep()));
-  Serial.println("Current steps after - Y-axis: " + String(axisY.getStep()));
+  positionY = Serial.parseInt();
+  Serial.println("Position before - X-axis: " + String(axisX.getPosition()));
+  Serial.println("Position step before - Y-axis: " + String(axisY.getPosition()));
+  robot.toPositionXY(positionX, positionY);
+  Serial.println("Position after - X-axis: " + String(axisX.getPosition()));
+  Serial.println("Position after - Y-axis: " + String(axisY.getPosition()));
 }
