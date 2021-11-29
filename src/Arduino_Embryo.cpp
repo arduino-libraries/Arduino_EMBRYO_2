@@ -19,6 +19,7 @@
 #include "Arduino_Embryo.h"
 // Interrupt
 StepMotor* StepMotor::_thisMotor = 0;
+Embryo* Embryo::_thisEmbryo = 0;
 
 StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnStart, uint8_t btnEmergencyStop)
 {
@@ -92,24 +93,24 @@ void StepMotor::pause(void){
 
 bool StepMotor::homing(void){
   Serial.println ("Homing axis " + String(_id));
+
+  while(!readEndstopHome()){
+    moveBackward();
+  } 
+
   _totalSteps = 0;
-  setFarDirection();
+  
   while(!readEndstopFar()){
-    pulseMotor();
+    moveForward();
     _totalSteps++;
   }
   Serial.println("Axis " + String (_id) + " - Endstop Far was found.");
-  Serial.println("Axis " + String(_id) + " - Total steps - 1st time = " + String(_totalSteps));
-  _totalSteps = 0;
 
-  setHomeDirection();
   while(!readEndstopHome()){
-    pulseMotor();
-    _totalSteps++;
+    moveBackward();
   } 
+
   Serial.println("Axis " + String (_id) + " - Endstop Home was found.");
-  Serial.println("Axis " + String(_id) + " - Total steps - 2nd time = " + String(_totalSteps));
-  _totalSteps /= 2;
   Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
 
   _currentStep = 0;
@@ -161,7 +162,10 @@ void StepMotor::pulseMotor(void){
 
 void StepMotor::moveForward(void){
   if(!_ready) return;
-  setFarDirection();
+  if(_dir != _farDir){
+    setFarDirection();
+  }
+    
   if(!readEndstopFar()){
     pulseMotor();
     _currentStep++;
@@ -173,7 +177,10 @@ void StepMotor::moveForward(void){
 
 void StepMotor::moveBackward(void){
   if(!_ready) return;
-  setHomeDirection();
+  if(_dir != _homeDir){
+    setHomeDirection();
+  }
+    
   if(!readEndstopHome()){
     pulseMotor();
     _currentStep--;
@@ -226,10 +233,12 @@ uint32_t StepMotor::getPosition(void){
 }
 
 void StepMotor::setHomeDirection(void){
+  _dir = _homeDir;
   digitalWrite(_direction_pin, _homeDir); // Set up home direction
 }
 
 void StepMotor::setFarDirection(void){
+  _dir = _farDir;
   digitalWrite(_direction_pin, _farDir); // Set up far from home direction
 }
 
@@ -320,21 +329,58 @@ void StepMotor::checkInputs(void){
   } else Serial.println("BACKWARD BUTTON is OK.");
 }
 
-Embryo::Embryo(StepMotor axisX, StepMotor axisY)
+Embryo::Embryo(StepMotor *axisX, StepMotor *axisY, uint8_t btnStart, uint8_t btnEmergencyStop)
 {
-  _axisX = &axisX;
-  _axisY = &axisY;
+  _axisX = axisX;
+  _axisY = axisY;
+  _btnStartEmbryo = btnStart;
+  _btnEmergencyStopEmbryo = btnEmergencyStop;
+
+  // Interrupt
+  _thisEmbryo = this;
 }
 
 void Embryo::begin(){
   _axisX->begin();
+  _axisX->terminateInterrupt();
   _axisY->begin();
-  
+  _axisY->terminateInterrupt();
+  prepareInterrupt();
 }
 
 void Embryo::start(){
   _axisX->start();
   _axisY->start();
+}
+
+void Embryo::end(void){
+  _axisX->end();
+  _axisY->end();
+  Serial.println("Stopped embryo");
+}
+
+bool Embryo::ready(void){
+  return (_axisX->ready() && _axisY->ready());
+}
+
+void Embryo::prepareInterrupt(void){
+  attachInterrupt(digitalPinToInterrupt(_btnStartEmbryo), startISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStopEmbryo), endISR, RISING);
+}
+
+void Embryo::terminateInterrupt(void){
+  detachInterrupt(digitalPinToInterrupt(_btnEmergencyStopEmbryo));
+  detachInterrupt(digitalPinToInterrupt(_btnStartEmbryo));
+}
+
+void Embryo::startISR(void){
+  if(_thisEmbryo != 0)
+    _thisEmbryo->start();
+}
+
+void Embryo::endISR(void){
+  Serial.println("Emergency!");
+    _thisEmbryo->end();
 }
 
 void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
@@ -347,8 +393,8 @@ void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
 void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
   uint32_t _stepX = stepX;
   uint32_t _stepY = stepY;
-  _axisX->toPosition(_stepX);
-  _axisY->toPosition(_stepY);
+  _axisX->toStep(_stepX);
+  _axisY->toStep(_stepY);
 }
 
 void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_t finalPositionX, uint8_t finalPositionY){
