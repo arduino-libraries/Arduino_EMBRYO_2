@@ -69,7 +69,7 @@ void loop() {
   while((Serial.available() <= 0)){};
   positionY = Serial.parseInt();
   Serial.println("Position before - X-axis: " + String(axisX.getPosition()));
-  Serial.println("Position step before - Y-axis: " + String(axisY.getPosition()));
+  Serial.println("Position before - Y-axis: " + String(axisY.getPosition()));
   robot.toPositionXY(positionX, positionY);
   Serial.println("Position after - X-axis: " + String(axisX.getPosition()));
   Serial.println("Position after - Y-axis: " + String(axisY.getPosition()));
