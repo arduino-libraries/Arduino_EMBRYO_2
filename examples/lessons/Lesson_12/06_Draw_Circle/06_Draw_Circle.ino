@@ -57,12 +57,12 @@ void setup() {
                          // service routine that enables the motor and runs
                          // the homing procedure
   Serial.println("Move the axis between to minimum position 0cm and the maximum position 45cm");
-  Embryo.toPositionXY(5,5); // Send tool to the initial position
+  robot.toPositionXY(5,5); // Send tool to the initial position
   Serial.println("Press the forward button to continue ...");
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  if(axis.readBtnForward()){
-    Embryo.drawCircle(15,15,5);
+  if(axisX.readBtnForward()){
+    robot.drawCircle(15,15,5);
   }
 }
