@@ -56,7 +56,7 @@ void setup() {
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
-  Serial.println("Move the axis between to minimum position 0cm and the maximum position 45cm");
+  Serial.println("Moving the robot to the intial XY position ...");
   robot.toPositionXY(5,5); // Send tool to the initial position
   Serial.println("Press the forward button to continue ...");
 }
