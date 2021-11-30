@@ -22,7 +22,7 @@ const int ForwardPinY  = A4;   // Forward Button Y-axis
 const int startPin = 2;        // Start Button
 const int emergencyPin  = 12;  // Emergency Button
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axisX(X_AXIS,
                 enablePin,
                 DirPinX,
@@ -49,22 +49,27 @@ StepMotor axisY(Y_AXIS,
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial){};
-  robot.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  robot.begin(); // Configure the two-axis robot inputs pins, outputs pins, and interruptions pins
+
   Serial.println("Press the Start Button to start the machine");
   while(!robot.ready()); // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+  
   Serial.println("Moving the robot to the initial XY position ...");
+  
   robot.toPositionXY(5,5); // Send tool to the initial position
+  
   Serial.println("Press the forward button to continue ...");
 }
 void loop() {
   // put your main code here, to run repeatedly:
   // Check the forward button signal
   if(axisX.readBtnForward()){
-    robot.drawCircle(15,15,5);
+    robot.drawCircle(15,15,5); // Draws a circle
   }
 }

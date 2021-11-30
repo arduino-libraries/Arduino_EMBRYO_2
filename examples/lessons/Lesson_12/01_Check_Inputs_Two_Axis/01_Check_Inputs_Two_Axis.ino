@@ -47,12 +47,14 @@ StepMotor axisY(Y_AXIS,
 
 void setup() {
   // put your setup code here, to run once:
-  // Configure and start Serial Communication
-  Serial.begin(115200); 
-  while (!Serial) {};
-  axisX.begin(); // Configure inputs pins, outputs pins and interuptions pins
-  axisY.begin(); // Configure inputs pins, outputs pins and interuptions pins
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+ 
+  axisX.begin(); // Configure X-axis inputs pins, outputs pins and interruptions pins
+  axisY.begin(); // Configure Y-axis inputs pins, outputs pins and interruptions pins
+
   axisX.checkInputs(); // Verify the boolean value of X-axis inputs and print in the serial monitor
+  
   axisY.checkInputs(); // Verify the boolean value of Y-axis inputs and print in the serial monitor
 } 
 

@@ -51,27 +51,38 @@ StepMotor axisY(Y_AXIS,
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial){};
-  robot.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  robot.begin(); // Configure the two-axis robot inputs pins, outputs pins, and interruptions pins
+
   Serial.println("Press the Start Button to start the machine");
   while(!robot.ready()); // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+
   Serial.println("Move the axis between to minimum position 0cm and the maximum position 45cm");
 }
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("Enter the number of the position for X-axis: ");
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  positionX = Serial.parseInt();
+  positionX = Serial.parseInt(); // Reads the value in the serial port
+
   Serial.println("Enter the number of the position for Y-axis: ");
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  positionY = Serial.parseInt();
+  positionY = Serial.parseInt(); // Reads the value in the serial port
+
+  // Print the axis position before running the command
   Serial.println("Position before - X-axis: " + String(axisX.getPosition()));
   Serial.println("Position before - Y-axis: " + String(axisY.getPosition()));
-  robot.toPositionXY(positionX, positionY);
+
+  robot.toPositionXY(positionX, positionY); // Runs the command
+
+  // Print the axis position after running the command
   Serial.println("Position after - X-axis: " + String(axisX.getPosition()));
   Serial.println("Position after - Y-axis: " + String(axisY.getPosition()));
 }

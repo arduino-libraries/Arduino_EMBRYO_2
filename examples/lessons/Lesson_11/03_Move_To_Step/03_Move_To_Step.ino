@@ -27,22 +27,32 @@ StepMotor axis(X_AXIS,
                 emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial) {};
-  axis.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  axis.begin(); // Configure inputs pins, outputs pins and interruptions pins
+
   Serial.println("Press the Start Button to start the machine.");
   while(!axis.ready());  // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+  
   Serial.println("Move the axis between to minimum step (zero, 0) and the total step (" + String(String(axis.getTotalSteps())) + ")");
 }
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("Enter the number of the step: ");
+  
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  stepNum = Serial.parseInt();
+  stepNum = Serial.parseInt(); // Reads the value in the serial port
+
+  // Print the current step value before running the command
   Serial.println("Current step before: " + String(axis.getStep()));
-  axis.toStep(stepNum);
+
+  axis.toStep(stepNum); // Runs the command
+
+  // Print the current step value after running the command
   Serial.println("Current steps after: " + String(axis.getStep()));
 }

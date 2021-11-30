@@ -51,9 +51,11 @@ StepMotor axisY(Y_AXIS,
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial){};
-  robot.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  robot.begin(); // Configure the two-axis robot inputs pins, outputs pins, and interruptions pins
+
   Serial.println("Press the Start Button to start the machine");
   while(!robot.ready()); // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
@@ -63,14 +65,23 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("Enter the number of the step for X-axis: ");
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  stepNumX = Serial.parseInt();
+  stepNumX = Serial.parseInt(); // Reads the value in the serial port
+
+  
   Serial.println("Enter the number of the step for Y-axis: ");
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  stepNumY = Serial.parseInt();
+  stepNumY = Serial.parseInt(); // Reads the value in the serial port
+
+  // Print the current step value before running the command
   Serial.println("Current step before - X-axis: " + String(axisX.getStep()));
   Serial.println("Current step before - Y-axis: " + String(axisY.getStep()));
-  robot.toStepXY(stepNumX, stepNumY);
+  
+  robot.toStepXY(stepNumX, stepNumY); // Runs the command
+
+  // Print the axis current step value after running the command
   Serial.println("Current steps after - X-axis: " + String(axisX.getStep()));
   Serial.println("Current steps after - Y-axis: " + String(axisY.getStep()));
 }

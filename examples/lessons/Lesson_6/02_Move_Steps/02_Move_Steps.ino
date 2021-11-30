@@ -30,11 +30,11 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);       // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
-  motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
+  motor.begin();              // Configure inputs pins, outputs pins and interruptions pins
   motor.startWithoutHoming(); // Initialize the motor without homing procedure, detached
                               // interruptions pins and configures endstops as OUTPUT
                               // Use this function only with the motor outside the axis
-  motor.setTotalSteps(50000); // Set the max step of the motor (necessary, because the total setp count is inicializaed with zero)
+  motor.setTotalSteps(50000); // Set the max step of the motor (necessary, because the total setp count is intialized with zero)
 } 
 
 void loop() {
@@ -43,11 +43,14 @@ void loop() {
 
   // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  steps = Serial.parseInt();  // Reads the value
+  steps = Serial.parseInt();  // Reads the value in the serial port
 
+  // Print the current step value before running the command
   Serial.println("Currentstep before running the command: " + String(motor.getStep()));
+  
   motor.moveSteps(steps); // Runs the command
 
+  // Print the current step value after running the command
   Serial.println("Curentstep after running the command: " + String(motor.getStep()));
   
   Serial.read(); // Clean serial buffer

@@ -45,17 +45,19 @@ StepMotor axisY(Y_AXIS,
                 startPin,
                 emergencyPin);
 
-Embryo robot(axisX, axisY);
-
 void setup() {
-  Serial.begin(115200);
-  while (!Serial) {};
-  axisX.begin();
-  axisY.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  axisX.begin(); // Configure X-axis inputs pins, outputs pins and interruptions pins
+  axisY.begin(); // Configure Y-axis inputs pins, outputs pins and interruptions pins
+
+  // Waits for the user to send a value via serial port
   Serial.println("Send any key to serial ...");
-  while((Serial.available() <= 0)){};
-  axisX.start();
-  axisY.start();
+  while((Serial.available() <= 0)){}; // Reads the value in the serial port
+
+  axisX.start(); // Initialize the X-axis
+  axisY.start(); // Initialize the Y-axis
 }
 void loop() {
   // put your main code here, to run repeatedly:

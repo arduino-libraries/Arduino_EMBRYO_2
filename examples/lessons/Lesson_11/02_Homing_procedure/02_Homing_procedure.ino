@@ -26,9 +26,11 @@ StepMotor axis(X_AXIS,
                 emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial) {};
-  axis.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  axis.begin(); // Configure inputs pins, outputs pins and interruptions pins
+  
   Serial.println("Press the Start Button to start the machine");
   while(!axis.ready());  // Wait for Start button to be pressed
                          // The start button is attached to the interrupt

@@ -35,21 +35,30 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);       // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
-  motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
+
+  motor.begin();              // Configure inputs pins, outputs pins and interruptions pins
+
   motor.startWithoutHoming(); // Initialize the motor without homing procedure, detached
                               // interruptions pins and configures endstops as OUTPUT
                               // Use this function only with the motor outside the axis
   
   Serial.println("To start, send any key to serial port ...");
   // Without this instruction the motor will move after the upload (It is dangerous)
-  while((Serial.available() <= 0)){};
+  while((Serial.available() <= 0)){}; // Wait for data in the serial port
+  Serial.read(); // Clean serial buffer
+
   Serial.println("Use the potentiometer to control the speed.");
 }
 void loop() {
   speedMotor = analogRead(analogPin);  // read the input pin
+
+  // Re-maps an analog value to speed value
   speedMotor = map(speedMotor, 0, 1023, MIN_SPEED, MAX_SPEED);
-  Serial.println(speedMotor);          // debug value
-  motor.setSpeed(speedMotor);          // Define the motor speed
+
+  Serial.println(speedMotor); // Send the new value to serial monitor
+
+  motor.setSpeed(speedMotor); // Sets the motor speed
+  
   // Check the forward button signal
   if(motor.readBtnForward() == HIGH)
     motor.moveForward();  // Motor rotates clockwise

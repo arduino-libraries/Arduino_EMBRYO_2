@@ -3,7 +3,7 @@
 #define X_AXIS      1
 #define echoPin  9 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define trigPin 10 // attach pin D3 Arduino to pin Trig of HC-SR04
-#define motorOffset 5 // Offset of the sensor and the motor home position
+#define motorOffset 5 // Offset between the sensor and the motor home position
 
 /*C O N S T A N T S   A N D   V A R I A B L E S*/
 const int enablePin = A5;      // Enable Pin
@@ -36,12 +36,15 @@ int readUltrasonic(){
   // Clears the trigPin condition
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
+
   // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
+
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin, HIGH);
+
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
 
@@ -51,15 +54,20 @@ int readUltrasonic(){
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT);  // Sets the echoPin as an INPUT
-  Serial.begin(115200);
-  while (!Serial) {};
-  axis.begin();
+
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  axis.begin(); // Configure inputs pins, outputs pins and interruptions pins
+
   Serial.println("Press the Start Button to start the machine");
   while(!axis.ready());  // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+ 
   Serial.println("Move the axis between to minimum position 0cm and the maximum position 45cm");
+
   Serial.println("Move some object in front of the sensor");
 }
 void loop() {
@@ -67,6 +75,6 @@ void loop() {
   // Check the forward button signal
   if(axis.readBtnForward()){
     positionNum = readUltrasonic() - motorOffset;
-    axis.toPosition(positionNum);
+    axis.toPosition(positionNum); // Moves the robot carriage
   }
 }

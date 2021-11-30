@@ -30,7 +30,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);        // Configure and start Serial Communication
   while (!Serial) {};          // Wait to open the serial monitor
-  motor.begin();               // Configure inputs pins, outputs pins and interuptions pins
+  
+  motor.begin();               // Configure inputs pins, outputs pins and interruptions pins
   motor.startWithoutHoming();  // Initialize the motor without homing procedure, detached
                                // interruptions pins and configures endstops as OUTPUT
                                // Use this function only with the motor outside the axis

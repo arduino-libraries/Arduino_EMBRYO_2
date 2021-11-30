@@ -49,26 +49,34 @@ StepMotor axisY(Y_AXIS,
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
-  Serial.begin(115200);
-  while (!Serial){};
-  robot.begin();
+  Serial.begin(115200);        // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+
+  robot.begin(); // Configure the two-axis robot inputs pins, outputs pins, and interruptions pins
+
   Serial.println("Press the Start Button to start the machine");
   while(!robot.ready()); // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
+  
   Serial.println("Moving the robot to the initial XY position ...");
+
   robot.toPositionXY(5,5); // Send tool to the initial position
+
   Serial.println("Press the forward button to continue ...");
 }
 void loop() {
   // put your main code here, to run repeatedly:
   // Check the forward button signal
   if(axisX.readBtnForward()){
-    robot.drawLine(5,5,5,10);
+    robot.drawLine(5,5,5,10); // Draws one line
     delay(500);
-    robot.drawLine(5,10,10,10);
+
+    robot.drawLine(5,10,10,10); // Draws other line
     delay(500);
-    robot.drawLine(10,10,5,5);
+
+    robot.drawLine(10,10,5,5);  // Draws a diagonal line
+    delay(500);
   }
 }
