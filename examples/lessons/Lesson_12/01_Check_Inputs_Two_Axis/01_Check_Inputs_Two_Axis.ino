@@ -22,7 +22,7 @@ const int ForwardPinY  = A4;   // Forward Button Y-axis
 const int startPin = 2;        // Start Button
 const int emergencyPin  = 12;  // Emergency Button
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axisX(X_AXIS,
                 enablePin,
                 DirPinX,
@@ -52,8 +52,8 @@ void setup() {
   while (!Serial) {};
   axisX.begin(); // Configure inputs pins, outputs pins and interuptions pins
   axisY.begin(); // Configure inputs pins, outputs pins and interuptions pins
-  axisX.checkInputs(); // Verify the boolean value of the axis inputs and print in the serial monitor
-  axisY.checkInputs(); // Verify the boolean value of the axis inputs and print in the serial monitor
+  axisX.checkInputs(); // Verify the boolean value of X-axis inputs and print in the serial monitor
+  axisY.checkInputs(); // Verify the boolean value of Y-axis inputs and print in the serial monitor
 } 
 
 void loop() {

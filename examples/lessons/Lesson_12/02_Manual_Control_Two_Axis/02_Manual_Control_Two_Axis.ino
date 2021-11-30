@@ -22,7 +22,7 @@ const int ForwardPinY  = A4;   // Forward Button Y-axis
 const int startPin = 2;        // Start Button
 const int emergencyPin  = 12;  // Emergency Button
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axisX(X_AXIS,
                 enablePin,
                 DirPinX,
@@ -51,29 +51,27 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
   axisX.begin();
-//  Serial.println("Press the Start Button to run home procedure on X axis");
-//  while(!axisX.ready()); // Wait for Start button to be pressed
-//                         // The start button is attached to the interrupt
-//                         // service routine that enables the motor and runs
-//                         // the homing procedure
   axisY.begin();
   Serial.println("Send any key to serial ...");
   while((Serial.available() <= 0)){};
   axisX.start();
   axisY.start();
-//  Serial.println("Press the Start Button to run home procedure on Y axis");
-//  while(!axisY.ready()); // Wait for Start button to be pressed
-//                         // The start button is attached to the interrupt
-//                         // service routine that enables the motor and runs
-//                         // the homing procedure
 }
 void loop() {
-  if(axisX.readBtnForward())
+  // put your main code here, to run repeatedly:
+  // Check the forward button signal
+  if(axisX.readBtnForward() == HIGH)
     axisX.moveForward();
-  if(axisY.readBtnForward())
+  
+  // Check the forward button signal
+  if(axisY.readBtnForward() == HIGH)
     axisY.moveForward();
-  if(axisX.readBtnBackward())
+
+  // Check the forward button signal
+  if(axisX.readBtnBackward() == HIGH)
     axisX.moveBackward();
-  if(axisY.readBtnBackward())
+
+  // Check the forward button signal
+  if(axisY.readBtnBackward() == HIGH)
     axisY.moveBackward();
 }

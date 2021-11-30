@@ -17,9 +17,9 @@ const int FarEndstop = 4;      // Far From Home endstop X-axis
 long steps = 0;
 
 int analogPin = A0;            // Potentiometer pin
-int speedMotor = 200;          // Intial speed (Max speed = 200 and Min speed = 25000)
+int speedMotor = 200;          // Initial speed (Max speed = 200 and Min speed = 25000)
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor motor(X_AXIS,
                 enablePin,
                 DirPin,
@@ -50,7 +50,7 @@ void loop() {
   speedMotor = map(speedMotor, 0, 1023, MIN_SPEED, MAX_SPEED);
   Serial.println(speedMotor);          // debug value
   motor.setSpeed(speedMotor);          // Define the motor speed
-  // Verifies if the forward button is pressed
+  // Check the forward button signal
   if(motor.readBtnForward() == HIGH)
     motor.moveForward();  // Motor rotates clockwise
 }

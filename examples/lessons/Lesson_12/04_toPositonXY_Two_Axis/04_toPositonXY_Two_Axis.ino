@@ -24,7 +24,7 @@ const int emergencyPin  = 12;  // Emergency Button
 
 unsigned int positionX = 0, positionY = 0;
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axisX(X_AXIS,
                 enablePin,
                 DirPinX,
@@ -47,6 +47,7 @@ StepMotor axisY(Y_AXIS,
                 startPin,
                 emergencyPin);
 
+// Construct object, Embryo(axisX, axisY, Start Button, Emergency Stop Button)
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {

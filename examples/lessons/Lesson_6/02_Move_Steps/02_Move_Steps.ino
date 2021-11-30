@@ -14,7 +14,7 @@ const int HomeEndstop = 3;     // Home endstop X-axis
 const int FarEndstop = 4;      // Far From Home endstop X-axis
 long steps = 0;
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor motor(X_AXIS,
                 enablePin,
                 DirPin,
@@ -40,10 +40,15 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("Enter the number of steps: ");
+
+  // Waits for the user to send a value via serial port
   while((Serial.available() <= 0)){};
-  steps = Serial.parseInt();
+  steps = Serial.parseInt();  // Reads the value
+
   Serial.println("Currentstep before running the command: " + String(motor.getStep()));
-  motor.moveSteps(steps);
+  motor.moveSteps(steps); // Runs the command
+
   Serial.println("Curentstep after running the command: " + String(motor.getStep()));
+  
   Serial.read(); // Clean serial buffer
 }

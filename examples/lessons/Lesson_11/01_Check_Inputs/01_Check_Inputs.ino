@@ -13,7 +13,7 @@ const int emergencyPin  = 12;  // Emergency Stop Button
 const int HomeEndstop = 3;     // Home endstop X-axis
 const int FarEndstop = 4;      // Far From Home endstop X-axis
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axis(X_AXIS,
                 enablePin,
                 DirPin,
@@ -45,7 +45,7 @@ void loop() {
   if(axis.readEndstopFar() == 1)
     Serial.println("Endstop Far was pressed!");
   if(axis.readBtnEmergencyStop() == 0)
-    // The emergency stop buuton is attached in the interrupt service routine
-    // So when you clik the button, you will the Emergency message will be printed too
+    // The emergency stop button is attached in the interrupt service routine
+    // So when you click the button, you will see the Emergency message printed too
     Serial.println("Emergency Stop Button was pressed!");
 }

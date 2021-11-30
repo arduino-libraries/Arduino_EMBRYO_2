@@ -45,6 +45,7 @@ StepMotor axisY(Y_AXIS,
                 startPin,
                 emergencyPin);
 
+// Construct object, Embryo(axisX, axisY, Start Button, Emergency Stop Button)
 Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
@@ -62,6 +63,7 @@ void setup() {
 }
 void loop() {
   // put your main code here, to run repeatedly:
+  // Check the forward button signal
   if(axisX.readBtnForward()){
     robot.drawCircle(15,15,5);
   }

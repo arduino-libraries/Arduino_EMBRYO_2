@@ -13,7 +13,7 @@ const int emergencyPin  = 12;  // Emergency Button
 const int HomeEndstop = 3;     // Home endstop X-axis
 const int FarEndstop = 4;      // Far From Home endstop X-axis
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
 StepMotor axis(X_AXIS,
                 enablePin,
                 DirPin,
@@ -37,11 +37,11 @@ void setup() {
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  // Verifies if the forward button is pressed
+  // Check the forward button signal
   if(axis.readBtnForward() == HIGH)
     axis.moveForward();  // Motor rotates clockwise
 
-  // Verifies if the forward button is pressed
+  // Check the backward button signal
   if(axis.readBtnBackward() == HIGH)
     axis.moveBackward(); // Motor rotates anticlockwise
 }
