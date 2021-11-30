@@ -39,6 +39,7 @@ StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_
 
   // Interrupt
   _thisMotor = this;
+
 }
 
 void StepMotor::begin(void){
@@ -329,10 +330,10 @@ void StepMotor::checkInputs(void){
   } else Serial.println("BACKWARD BUTTON is OK.");
 }
 
-Embryo::Embryo(StepMotor *axisX, StepMotor *axisY, uint8_t btnStart, uint8_t btnEmergencyStop)
+Embryo::Embryo(StepMotor& axisX, StepMotor& axisY, uint8_t btnStart, uint8_t btnEmergencyStop)
 {
-  _axisX = axisX;
-  _axisY = axisY;
+  _axisX = &axisX;
+  _axisY = &axisY;
   _btnStartEmbryo = btnStart;
   _btnEmergencyStopEmbryo = btnEmergencyStop;
 

@@ -47,7 +47,7 @@ StepMotor axisY(Y_AXIS,
                 startPin,
                 emergencyPin);
 
-Embryo robot(&axisX, &axisY, startPin, emergencyPin);
+Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
   Serial.begin(115200);

@@ -110,7 +110,7 @@ class StepMotor {
 
 class Embryo {
   public:
-    Embryo(StepMotor *axisX, StepMotor *axisY, uint8_t btnStart, uint8_t btnEmergencyStop);
+    Embryo(StepMotor& axisX, StepMotor& axisY, uint8_t btnStart, uint8_t btnEmergencyStop);
 
     void begin(void);
     void start(void);

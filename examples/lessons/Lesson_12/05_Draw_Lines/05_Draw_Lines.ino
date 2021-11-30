@@ -45,7 +45,7 @@ StepMotor axisY(Y_AXIS,
                 startPin,
                 emergencyPin);
 
-Embryo robot(&axisX, &axisY, startPin, emergencyPin);
+Embryo robot(axisX, axisY, startPin, emergencyPin);
 
 void setup() {
   Serial.begin(115200);
@@ -56,7 +56,7 @@ void setup() {
                          // The start button is attached to the interrupt
                          // service routine that enables the motor and runs
                          // the homing procedure
-  Serial.println("Moving the robot to the intial XY position ...");
+  Serial.println("Moving the robot to the initial XY position ...");
   robot.toPositionXY(5,5); // Send tool to the initial position
   Serial.println("Press the forward button to continue ...");
 }
