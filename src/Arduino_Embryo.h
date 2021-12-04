@@ -59,6 +59,7 @@ class StepMotor {
     uint32_t getTotalSteps(void);
     // Structure
     void setLength(uint8_t maxLength);
+    uint8_t getLength(void);
 
   private:
     /* ID */
@@ -126,7 +127,7 @@ class Embryo {
                   uint8_t centerY,
                   uint8_t radius);
 
-    void drawArk(uint8_t centerX,
+    void drawArc(uint8_t centerX,
                   uint8_t centerY,
                   uint8_t radius,
                   float initialAngle,
@@ -135,6 +136,7 @@ class Embryo {
   private:
     StepMotor* _axisX;
     StepMotor* _axisY;
+
     // Interrupt
     static Embryo* _thisEmbryo;
     static void startISR(void);
