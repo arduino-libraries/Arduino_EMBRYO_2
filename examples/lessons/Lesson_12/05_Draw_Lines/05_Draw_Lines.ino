@@ -3,6 +3,10 @@
 #define X_AXIS      1
 #define Y_AXIS      2
 
+#define INITIAL_POS_X      5
+#define INITIAL_POS_Y      5
+
+
 /*C O N S T A N T S   A N D   V A R I A B L E S*/
 const int enablePin = A5;      // Enable Pin
 const int DirPinX = 5;         // Direction Pin X-axis
@@ -54,6 +58,8 @@ void setup() {
 
   robot.begin(); // Configure the two-axis robot inputs pins, outputs pins, and interruptions pins
 
+  robot.setLengthXY(45, 38); // Set the axis (X,Y) length
+  
   Serial.println("Press the Start Button to start the machine");
   while(!robot.ready()); // Wait for Start button to be pressed
                          // The start button is attached to the interrupt
@@ -62,7 +68,7 @@ void setup() {
   
   Serial.println("Moving the robot to the initial XY position ...");
 
-  robot.toPositionXY(5,5); // Send tool to the initial position
+  robot.toPositionXY(INITIAL_POS_X, INITIAL_POS_Y); // Send tool to the initial position
 
   Serial.println("Press the forward button to continue ...");
 }

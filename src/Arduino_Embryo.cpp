@@ -388,6 +388,11 @@ void Embryo::endISR(void){
     _thisEmbryo->end();
 }
 
+void Embryo::setLengthXY(uint8_t lengthX, uint8_t lengthY){
+  _axisX->setLength(lengthX);
+  _axisY->setLength(lengthY);
+}
+
 void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
   uint8_t _positionX = positionX;
   uint8_t _positionY = positionY;
@@ -403,7 +408,7 @@ void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
 }
 
 void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_t finalPositionX, uint8_t finalPositionY){
-  uint8_t _resolution = 10;
+  uint8_t _resolution = 50000;
   uint32_t _movementX[_resolution], _movementY[_resolution];
   uint8_t _initialPositionX = initialPositionX;
   uint8_t _initialPositionY = initialPositionY;

@@ -117,6 +117,7 @@ class Embryo {
     void start(void);
     void end(void);
     bool ready(void);
+    void setLengthXY(uint8_t lengthX, uint8_t lengthY);
     void toPositionXY(uint8_t positionX, uint8_t positionY);
     void toStepXY(uint32_t stepX, uint32_t stepY);
     void drawLine(uint8_t initialPositionX,
