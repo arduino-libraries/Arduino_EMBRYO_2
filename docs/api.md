@@ -71,7 +71,7 @@ axis.begin()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();   // Configure inputs pins, outputs pins and interuptions pins
 }
@@ -106,7 +106,7 @@ axis.start()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.start();  // Initialize motor and run the homing procedure
@@ -143,7 +143,7 @@ axis.startWithoutHoming()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.startWithoutHoming();  // Initialize motor without homing procedure
@@ -180,7 +180,7 @@ axis.end()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.start();
@@ -214,7 +214,7 @@ axis.play()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.start();
@@ -254,7 +254,7 @@ axis.pause()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.start();
@@ -294,7 +294,7 @@ axis.homing()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.startWithoutHoming();  // Initialize motor without homing procedure
@@ -329,7 +329,7 @@ axis.ready()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -367,7 +367,7 @@ axis.prepareInterrupt()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   terminateInterrupt();  // Detach the interrupt pins
@@ -403,7 +403,7 @@ axis.terminateInterrupt()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   terminateInterrupt();  // Detach the interrupt pins
@@ -439,7 +439,7 @@ axis.moveForward()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press Init Button to start the machine");
@@ -477,7 +477,7 @@ axis.moveBackward()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -515,7 +515,7 @@ axis.moveSteps(numSteps)
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -554,7 +554,7 @@ axis.moveDistance(distance)
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -592,7 +592,7 @@ axis.toStep(step)
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -630,7 +630,7 @@ axis.toPosition(position)
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -669,7 +669,7 @@ axis.setSpeed(speed)
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.startWithoutHomming();  // Initialize the motor without homing procedure
@@ -710,7 +710,7 @@ axis.getStep()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -747,7 +747,7 @@ axis.getPosition()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -787,7 +787,7 @@ axis.readBtnForward()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -823,7 +823,7 @@ axis.readBtnBackward()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
@@ -859,7 +859,7 @@ axis.readBtnStart()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Start button logic");
@@ -892,7 +892,7 @@ axis.readBtnEmergencyStop()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Emergency Stop button logic");
@@ -925,7 +925,7 @@ axis.readEndstopHome()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Endstop Home logic");
@@ -959,7 +959,7 @@ axis.readEndstopFar()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Endstop Far logic");
@@ -993,7 +993,7 @@ axis.setTotalSteps()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   motor.init(false);  // Initialize the motor without homing procedure
@@ -1026,7 +1026,7 @@ axis.getTotalSteps()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Total steps initial: " + String(axis.getTotalSteps()));
@@ -1060,7 +1060,7 @@ axis.setLength()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.setLenght(45);
 }
@@ -1090,7 +1090,7 @@ axis.checkInputs()
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.checkInputs();
