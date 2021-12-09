@@ -41,7 +41,7 @@ This is an example of how code can be built iteratively around a certain machine
     Includes information about the system itself, the pinouts to the connected sensors and actuators, and constructs to navigate through them
 
   - ### Comm Functions
-    Functions dedicated to send and receive informaiton via Serial port
+    Functions dedicated to send and receive information via Serial port
 
   - ### Data Functions
     Handling of the information from sensors, arranging into easy to compare arrays, etc
