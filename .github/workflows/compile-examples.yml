@@ -49,11 +49,7 @@ jobs:
             # Install library dependencies.
           sketch-paths: |
             # Sketches to compile
-            - './examples/Motion-Control-II/'
-            - './examples/Multi-Motor/'
-            - './examples/Single-Motor/'
-
-            
+            - ./examples            
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
 
