@@ -49,22 +49,22 @@ jobs:
             # Install library dependencies.
           sketch-paths: |
             # Sketches to compile
-            - ./examples/Motion-Control-II/01_Step_Check
-            - ./examples/Motion-Control-II/02_Step_Control
-            - ./examples/Motion-Control-II/03_Direction_Control
-            - ./examples/Motion-Control-II/04_Speed_Control
-            - ./examples/Multi-Motor/01_Check_Inputs_Two_Axis
-            - ./examples/Multi-Motor/02_Manual_Control_Two_Axis
-            - ./examples/Multi-Motor/03_toStepXY_Two_Axis
-            - ./examples/Multi-Motor/04_toPositionXY_Two_Axis
-            - ./examples/Multi-Motor/05_Draw_Lines
-            - ./examples/Multi-Motor/06_Draw_Rectangle
-            - ./examples/Multi-Motor/07_Draw_Circle
-            - ./examples/Single-Motor/01_Check_Inputs
-            - ./examples/Single-Motor/02_Homing_procedure
-            - ./examples/Single-Motor/03_Move_To_Step
-            - ./examples/Single-Motor/04_Move_To_Position
-            - ./examples/Single-Motor/05_Ultrasonic_Sensor
+            - './examples/Motion-Control-II/01_Step_Check/'
+            - './examples/Motion-Control-II/02_Step_Control/'
+            - './examples/Motion-Control-II/03_Direction_Control/'
+            - './examples/Motion-Control-II/04_Speed_Control/'
+            - './examples/Multi-Motor/01_Check_Inputs_Two_Axis/'
+            - './examples/Multi-Motor/02_Manual_Control_Two_Axis/'
+            - './examples/Multi-Motor/03_toStepXY_Two_Axis/'
+            - './examples/Multi-Motor/04_toPositionXY_Two_Axis/'
+            - './examples/Multi-Motor/05_Draw_Lines/'
+            - './examples/Multi-Motor/06_Draw_Rectangle/'
+            - './examples/Multi-Motor/07_Draw_Circle/'
+            - './examples/Single-Motor/01_Check_Inputs/'
+            - './examples/Single-Motor/02_Homing_procedure/'
+            - './examples/Single-Motor/03_Move_To_Step/'
+            - './examples/Single-Motor/04_Move_To_Position/'
+            - './examples/Single-Motor/05_Ultrasonic_Sensor/'
 
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
