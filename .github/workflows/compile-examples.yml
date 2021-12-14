@@ -32,7 +32,7 @@ jobs:
 
       matrix:
         board:
-          - fqbn: arduino:samd:mkrwifi1010
+          - fqbn: arduino:avr:uno
 
     steps:
       - name: Checkout
@@ -49,7 +49,9 @@ jobs:
             # Install library dependencies.
           sketch-paths: |
             # Sketches to compile
-            - './examples/'
+            - './examples/Motion-Control-II/'
+            - './examples/Multi-Motor/'
+            - './examples/Single-Motor/'
 
             
           enable-deltas-report: true
