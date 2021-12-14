@@ -35,10 +35,7 @@ jobs:
           - fqbn: arduino:avr:uno
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      
-        - name: Compile example sketches
+      - name: Compile example sketches
         uses: arduino/compile-sketches@v1
         with:
           fqbn: arduino:avr:uno
