@@ -35,20 +35,23 @@ jobs:
           - fqbn: arduino:avr:uno
 
     steps:
-      - name: Compile example sketches
-        uses: arduino/compile-sketches@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@main
         with:
-          fqbn: arduino:avr:uno
-          platforms: |
-            - name: arduino:avr
-          libraries: |
-            - source-path: ./
-          sketch-paths: |
-            - examples            
-          enable-deltas-report: true
-          enable-warnings-report: true
-          sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.board.fqbn }}
+          libraries: |
+            # Install the library from the local path.
+            - source-path: ./
+            # Install library dependencies.
+          sketch-paths: |
+            - './examples'
+            
+          enable-deltas-report: true
+          sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
 
       - name: Save memory usage change report as artifact
         uses: actions/upload-artifact@v2
