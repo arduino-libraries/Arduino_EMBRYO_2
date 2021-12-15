@@ -48,7 +48,7 @@ jobs:
             - source-path: ./
             # Install library dependencies.
           sketch-paths: |
-            - './examples'
+            - './examples/lessons/Single-Motor/01_Check_Inputs'
             
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
