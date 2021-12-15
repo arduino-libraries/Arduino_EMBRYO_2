@@ -37,7 +37,7 @@ void setup() {
   motor.startWithoutHoming(); // Initialize the motor without homing procedure, detached
                               // interruptions pins and configures endstops as OUTPUT
                               // Use this function only with the motor outside the axis
-  motor.setTotalSteps(50000); // Set the max step of the motor (necessary, because the total setp count is intialized with zero)
+  motor.setTotalSteps(50000); // Set the max step of the motor (necessary, because the total setp count is initialized with zero)
 } 
 
 void loop() {

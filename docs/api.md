@@ -90,7 +90,7 @@ void loop() {}
 
 Initializes the motor.
 
-Enables and starts the motor, then the motor is setted as ready and does the homing procedure. This function is associated with the Start Button ISR.
+Enables and starts the motor, then the motor is set as ready and does the homing procedure. This function is associated with the Start Button ISR.
 
 #### Syntax
 
@@ -127,7 +127,7 @@ void loop() {}
 
 Initializes the motor.
 
-Enables and starts the motor, then the motor is setted as ready but it doesn't run the homing procedure. Use this function only with the motor outside the axis.
+Enables and starts the motor, then the motor is set as ready but it doesn't run the homing procedure. Use this function only with the motor outside the axis.
 
 #### Syntax
 
@@ -635,7 +635,7 @@ void setup() {
   axis.begin();
   Serial.println("Press the Start Button to start the machine");
   while(!axis.ready()); // Wait for Start button to be pressed
-  Serial.println("Intial position: " + String(axis.getPosition()));
+  Serial.println("Initial position: " + String(axis.getPosition()));
   delay(1000);
   axis.toPosition(15);
   Serial.println("Final position: " + String(axis.getPosition()));
@@ -653,7 +653,7 @@ void loop() {}
 
 ### `setSpeed()`
 
-Sets the motor's speed, in milliseconds, according to the time between pulses. The maximun speed is 200 milliseconds and the minimun speed is 25000 milliseconds. The default speed value is 200 milliseconds.
+Sets the motor's speed, in milliseconds, according to the time between pulses. The maximum speed is 200 milliseconds and the minimum speed is 25000 milliseconds. The default speed value is 200 milliseconds.
 
 #### Syntax
 
@@ -753,7 +753,7 @@ void setup() {
   Serial.println("Press the Start Button to start the machine");
   while(!axis.ready()); // Wait for start button to be pressed
   delay(1000);
-  Serial.println("Intial position: " + String(axis.getPosition()));
+  Serial.println("Initial position: " + String(axis.getPosition()));
   delay(1000);
   axis.setPosition(15);
   Serial.println("Final position: " + String(axis.getPosition()));
@@ -997,7 +997,7 @@ void setup() {
   while (!Serial) {};
   axis.begin();
   motor.init(false);  // Initialize the motor without homing procedure
-  motor.setTotalSteps(50000); // Set the maximun steps of the motor
+  motor.setTotalSteps(50000); // Set the maximum steps of the motor
 }
 void loop() {}
 ```

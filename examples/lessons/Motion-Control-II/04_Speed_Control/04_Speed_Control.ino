@@ -53,7 +53,7 @@ void setup() {
 }
 void loop() {
   // read the input pin
-  speedMotor = analogRead(analogPin);
+  speedMotor = analogRead(potentiometer);
 
   // Re-maps an analog value to speed value
   speedMotor = map(speedMotor, 0, 1023, MIN_SPEED, MAX_SPEED);
