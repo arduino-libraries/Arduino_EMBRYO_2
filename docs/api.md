@@ -1,6 +1,6 @@
-# Embryo II library
+# Arduino Embryo 2 library
 
-## Methods
+## StepMotor Class Methods
 
 ### `StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t forwardPin, uint8_t backwardPin, uint8_t startPin, uint8_t emergencyStopPin)`
 
@@ -37,7 +37,7 @@ StepMotor axis(AXIS_ID,
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -49,13 +49,13 @@ void loop() {}
 #### See also
 
 -   [begin()](#begin)
--   [start()](#start)
 -   [checkInputs()](#checkInputs)
 -   [end()](#end)
+-   [start()](#start)
 
 ### `begin()`
 
-Configures inputs pins, outputs pins and interuptions pins.
+Configures inputs pins, outputs pins and interruptions pins.
 
 #### Syntax
 
@@ -66,14 +66,14 @@ axis.begin()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
   Serial.begin(9600);
   while (!Serial) {};
-  axis.begin();   // Configure inputs pins, outputs pins and interuptions pins
+  axis.begin();   // Configure inputs pins, outputs pins and interruptions pins
 }
 void loop() {}
 ```
@@ -101,7 +101,7 @@ axis.start()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -138,7 +138,7 @@ axis.startWithoutHoming()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -175,7 +175,7 @@ axis.end()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -209,7 +209,7 @@ axis.play()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -249,7 +249,7 @@ axis.pause()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -289,7 +289,7 @@ axis.homing()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -324,7 +324,7 @@ axis.ready()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -362,7 +362,7 @@ axis.prepareInterrupt()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -398,7 +398,7 @@ axis.terminateInterrupt()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -434,7 +434,7 @@ axis.moveForward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -472,7 +472,7 @@ axis.moveBackward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -510,7 +510,7 @@ axis.moveSteps(numSteps)
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -549,7 +549,7 @@ axis.moveDistance(distance)
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -587,7 +587,7 @@ axis.toStep(step)
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -625,7 +625,7 @@ axis.toPosition(position)
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -664,7 +664,7 @@ axis.setSpeed(speed)
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -705,7 +705,7 @@ axis.getStep()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -742,7 +742,7 @@ axis.getPosition()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -782,7 +782,7 @@ axis.readBtnForward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -818,7 +818,7 @@ axis.readBtnBackward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -854,7 +854,7 @@ axis.readBtnStart()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -887,7 +887,7 @@ axis.readBtnEmergencyStop()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -920,7 +920,7 @@ axis.readEndstopHome()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -954,7 +954,7 @@ axis.readEndstopFar()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -988,7 +988,7 @@ axis.setTotalSteps()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -1021,7 +1021,7 @@ axis.getTotalSteps()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -1055,7 +1055,7 @@ axis.setLength()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -1085,7 +1085,7 @@ axis.checkInputs()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_Embryo.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -1106,3 +1106,113 @@ void loop() {}
 -   [readBtnStart()](#readBtnStart)
 -   [readEndstopFar()](#readEndstopFar)
 -   [readEndstopHome()](#readEndstopHome)
+
+<hr>
+
+## Embryo Class Methods
+
+### `Embryo(StepMotor& axisX, StepMotor& axisY, uint8_t btnStart, uint8_t btnEmergencyStop);`
+
+Allows to control two linear axis.
+
+#### Syntax
+
+```
+Embryo robot(axisX, axisY, startPin, emergencyStopPin);
+```
+
+#### Parameters
+
+-   axisX: an object from StepMotor class
+-   axisY: an object form StepMotor class
+-   startPin: Pin connected to initialization button
+-   emergencyStopPin: Pin connected to emergency stop button
+
+#### Example
+
+```
+#include <Arduino_Embryo.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+
+void setup() {}
+void loop() {}
+```
+
+#### See also
+
+-   [begin()](#embryo-class-begin)
+-   [end()](#embryo-class-end)
+-   [start()](#embryo-class-start)
+
+### Embryo class `begin()`
+
+Configures inputs pins, outputs pins, and interruptions pins of the two-axis.
+
+#### Syntax
+
+```
+robot.begin()
+```
+
+#### Example
+
+```
+#include <Arduino_Embryo.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.begin();   // Configures pins of the two-axis.
+}
+void loop() {}
+```
+
+#### See also
+
+-   [end()](#embryo-class-end)
+-   [start()](#embryo-class-start)
+-   [ready()](#embryo-class-ready)
+
+### Embryo class `end()`
+
+Initializes two axis and configures interruptions pins.
+
+#### Syntax
+
+```
+robot.begin()
+```
+
+#### Example
+
+```
+#include <Arduino_Embryo.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.begin();   // Initializes two axis and configures interruptions pins
+}
+void loop() {}
+```
+
+#### See also
+
+-   [end()](#embryo-class-end)
+-   [start()](#embryo-class-start)
+-   [ready()](#embryo-class-ready)
