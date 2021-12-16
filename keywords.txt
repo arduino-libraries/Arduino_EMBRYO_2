@@ -43,6 +43,12 @@ getTotalSteps   KEYWORD2
 setLength   KEYWORD2
 checkInputs KEYWORD2
 
+toStepXY    KEYWORD2
+toPositionXY    KEYWORD2
+drawLine    KEYWORD2
+drawCircle  KEYWORD2
+drawArc KEYWORD2
+
 #######################################
 # Constants (LITERAL1)
 #######################################

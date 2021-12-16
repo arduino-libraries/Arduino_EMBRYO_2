@@ -1,6 +1,6 @@
 # Arduino Embryo 2 library
 
-## StepMotor Class Methods
+## StepMotor
 
 ### `StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t forwardPin, uint8_t backwardPin, uint8_t startPin, uint8_t emergencyStopPin)`
 
@@ -1145,11 +1145,11 @@ void loop() {}
 
 #### See also
 
--   [begin()](#embryo-class-begin)
--   [end()](#embryo-class-end)
--   [start()](#embryo-class-start)
+-   [begin()](#begin)
+-   [end()](#end)
+-   [start()](#start)
 
-### Embryo class `begin()`
+### `begin()`
 
 Configures inputs pins, outputs pins, and interruptions pins of the two-axis.
 
@@ -1179,18 +1179,18 @@ void loop() {}
 
 #### See also
 
--   [end()](#embryo-class-end)
--   [start()](#embryo-class-start)
--   [ready()](#embryo-class-ready)
+-   [end()](#end)
+-   [start()](#start)
+-   [ready()](#ready)
 
-### Embryo class `end()`
+### `end()`
 
-Initializes two axis and configures interruptions pins.
+Disables the two-axis and sets them as not ready. This function is associated with the Emergency Stop Button ISR.
 
 #### Syntax
 
 ```
-robot.begin()
+robot.end()
 ```
 
 #### Example
@@ -1207,12 +1207,13 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {};
   robot.begin();   // Initializes two axis and configures interruptions pins
+
 }
 void loop() {}
 ```
 
 #### See also
 
--   [end()](#embryo-class-end)
--   [start()](#embryo-class-start)
--   [ready()](#embryo-class-ready)
+-   [end()](#end)
+-   [start()](#start)
+-   [ready()](#ready)

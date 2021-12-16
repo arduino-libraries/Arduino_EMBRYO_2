@@ -1,8 +1,8 @@
 <!-- [![Compiling](https://github.com/bcmi-labs/Arduino_Embryo//actions/workflows/compile-examples.yml/badge.svg)](https://github.com/bcmi-labs/Arduino_Embryo//actions/workflows/compile-examples.yml) -->
 
-# Embryo_II
+# Arduino_Embryo_2
 
-Control a stepper motor in a linear axis for **Embryo II**.
+Control a stepper motor in a linear axis for **Arduino Embryo 2**.
 
 # License
 
