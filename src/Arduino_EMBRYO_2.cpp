@@ -16,7 +16,7 @@
 */
 
 #include <Arduino.h>
-#include "Arduino_Embryo.h"
+#include "Arduino_EMBRYO_2.h"
 // Interrupt
 StepMotor* StepMotor::_thisMotor = 0;
 Embryo* Embryo::_thisEmbryo = 0;
