@@ -1,4 +1,4 @@
-#include "Arduino_Embryo.h"
+#include "Arduino_EMBRYO_2.h"
 /* I N I T I A L    D E F I N E S */
 #define X_AXIS      1
 #define Y_AXIS      2

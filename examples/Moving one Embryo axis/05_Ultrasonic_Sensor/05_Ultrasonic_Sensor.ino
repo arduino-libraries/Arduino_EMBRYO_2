@@ -1,4 +1,4 @@
-#include "Arduino_EMBRYO_2.h"
+#include "Arduino_Embryo.h"
 /* I N I T I A L    D E F I N E S */
 #define X_AXIS      1
 #define echoPin  9              // Attach pin D9 Arduino to pin Echo of HC-SR04
@@ -12,7 +12,7 @@ const int PulPin = 6;           // Step Pin X-axis
 const int BackwardPin = A1;     // Backward Button X-axis
 const int ForwardPin  = A2;     // Forward Button X-axis
 const int startPin = 2;         // Start Button
-const int emergencyPin  = 5;    // Emergency Button
+const int emergencyPin  = 12;   // Emergency Button
 const int HomeEndstop = 3;      // Home endstop X-axis
 const int FarEndstop = 4;       // Far From Home endstop X-axis
 int positionNum = 0;
@@ -46,8 +46,8 @@ int readUltrasonic(){
   duration = pulseIn(echoPin, HIGH);
 
   // Calculating the distance
-   // Speed of sound wave divided by 2 (go and back)
-  distance = duration * 0.034 / 2;
+  // Speed of sound wave divided by 2 (go and back)
+  distance = duration * 0.034 / 2; 
 
   return distance;
 }
@@ -56,7 +56,7 @@ void setup() {
   pinMode(trigPin, OUTPUT);     // Sets the trigPin as an OUTPUT
   pinMode(echoPin, INPUT);      // Sets the echoPin as an INPUT
 
-  Serial.begin(9600);           // Configure and start Serial Communication
+  Serial.begin(115200);         // Configure and start Serial Communication
   while (!Serial) {};           // Wait to open the serial monitor
 
   axis.begin();                 // Configure inputs pins, outputs pins and interruptions pins

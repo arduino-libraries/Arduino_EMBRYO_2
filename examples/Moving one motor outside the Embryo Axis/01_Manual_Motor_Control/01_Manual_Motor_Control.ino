@@ -1,4 +1,4 @@
-#include "Arduino_EMBRYO_2.h"
+#include "Arduino_Embryo.h"
 /* I N I T I A L    D E F I N E S */
 #define X_AXIS      1
 
@@ -9,12 +9,13 @@ const int PulPin = 6;           // Step Pin X-axis
 const int BackwardPin = A1;     // Backward Button X-axis
 const int ForwardPin  = A2;     // Forward Button X-axis
 const int startPin = 2;         // Start Button
-const int emergencyPin  = 5;    // Emergency Button
+const int emergencyPin  = 12;   // Emergency Stop Button
 const int HomeEndstop = 3;      // Home endstop X-axis
 const int FarEndstop = 4;       // Far From Home endstop X-axis
+long steps = 0;
 
 // Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
-StepMotor axis(X_AXIS,
+StepMotor motor(X_AXIS,
                 enablePin,
                 DirPin,
                 PulPin,
@@ -26,24 +27,23 @@ StepMotor axis(X_AXIS,
                 emergencyPin);
 
 void setup() {
-  Serial.begin(9600);           // Configure and start Serial Communication
+  // put your setup code here, to run once:
+  Serial.begin(115200);         // Configure and start Serial Communication
   while (!Serial) {};           // Wait to open the serial monitor
-
-  axis.begin();                 // Configure inputs pins, outputs pins and interruptions pins
   
-  Serial.println("Press the Start Button to start the machine");
-  while(!axis.ready());         // Wait for Start button to be pressed
-                                // The start button is attached to the interrupt
-                                // service routine that enables the motor and runs
-                                // the homing procedure
-}
+  motor.begin();                // Configure inputs pins, outputs pins and interruptions pins
+  motor.startWithoutHoming();   // Initialize the motor without homing procedure, detached
+                                // interruptions pins and configures endstops as OUTPUT
+                                // Use this function only with the motor outside the axis
+} 
+
 void loop() {
   // put your main code here, to run repeatedly:
   // Check the forward button signal
-  if(axis.readBtnForward() == HIGH)
-    axis.moveForward();  // Motor rotates clockwise
+  if(motor.readBtnForward() == HIGH)
+    motor.moveForward();        // Motor rotates clockwise
 
   // Check the backward button signal
-  if(axis.readBtnBackward() == HIGH)
-    axis.moveBackward(); // Motor rotates anticlockwise
+  if(motor.readBtnBackward() == HIGH)
+    motor.moveBackward();       // Motor rotates anticlockwise
 }
