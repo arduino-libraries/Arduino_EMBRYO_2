@@ -1,26 +1,25 @@
-# APA102 RBG LEDs library
+# Arduino EMBRYO 2 library
 
-This library allows an Arduino board to control the stepper motor of a linear axis for **Embryo II** robot. This robot axis are controlled with the motor pins and the panel buttons.
+This library allows Arduino boards to control stepper motors to be used in the **EMBRYO 2** educational modular machine. The linear axis of this machine are controlled with the stepper motor, buttons and switches. Ths library has two classes:
+- StepMotor class: allows us to control an individual linear axis.
+- Embryo class: allows us to control two coupled linear axis.
+
+**Attention**: For the library to work the endstops must be configure as pull-down, and the forward direction must rotate the step motor clockwise and backward direction must rotate the step motor anticlockwise.
 
 To use this library:
 
 ```
-#include <Embryo.h>
-
-StepMotor axis(AXIS_ID,
-               enablePin,
-               DirectionPin,
-               PulsePin,
-               HomeEndstop,
-               FarEndstop,
-               ForwardPin,
-               BackwardPin,
-               initPin,
-               emergencyStopPin);
+#include <Arduino_Embryo_2.h>
 ```
 
 ## Circuit
 
-TODO: Draw the circuit, because it uses a lot of pins.
+- X-axis motor connections
+![Step motor connections](images/embryo-power-4.png)
 
-## Examples
+- Y-axis motor connections
+![Step motor connections](images/embryo-power-5.png)
+
+- Linear axis endstops
+![Linear axis](images/end-stop-switches.png)
+
