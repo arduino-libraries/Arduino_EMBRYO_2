@@ -271,7 +271,7 @@ uint32_t StepMotor::getTotalSteps(void){
   return _totalSteps;
 }
 
-bool StepMotor::setTotalSteps(uint32_t totalSteps){
+void StepMotor::setTotalSteps(uint32_t totalSteps){
   _totalSteps = totalSteps;
 }
 
@@ -409,7 +409,6 @@ void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
 
 void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_t finalPositionX, uint8_t finalPositionY){
   uint8_t _resolution = 50000;
-  uint32_t _movementX[_resolution], _movementY[_resolution];
   uint8_t _initialPositionX = initialPositionX;
   uint8_t _initialPositionY = initialPositionY;
   uint8_t _finalPositionX = finalPositionX;
@@ -425,12 +424,7 @@ void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_
   int32_t hY = ((float)_finalStepY - (float)_initialStepY)/(_resolution - 1);
 
   for(int i = 0; i < _resolution; i++){
-    _movementX[i] = _initialStepX + (hX*i);
-    _movementY[i] = _initialStepY + (hY*i);
-
-    _axisX->toStep(_initialStepX + (hX*i));
-    _axisY->toStep(_initialStepY + (hY*i));
-    // Serial.println(String(_movementX[i]) + " " + String(_movementY[i]));
+    toStepXY(_initialStepX + (hX*i), _initialStepY + (hY*i));
   }
 }
 
@@ -455,16 +449,12 @@ void Embryo::drawArc(uint8_t centerX, uint8_t centerY, uint8_t radius, float ini
   uint32_t _initialStepX = map(_centerX + _radius, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
   uint32_t _initialStepY = map(_centerY, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
   
-  _axisX->toStep(_initialStepX);
-  _axisY->toStep(_initialStepY);
+  // toStepXY(_initialStepX, _initialStepY);
 
   for(float _i = _initialAngle; _i<= _finalAngle; _i++){
     double _radians = (3.14159*_i)/180.0;
     uint32_t _x = _radiusStepX*cos(_radians) + _centerStepX;
     uint32_t _y = _radiusStepY*sin(_radians) + _centerStepY;
-    _axisX->toStep(_x);
-    _axisY->toStep(_y);
-    // Serial.println(String(_x) + " " + String(_y));
-    // Serial.println(String(_radians) + " " + String(_i));
+    toStepXY(_x, _y);
   }
 }

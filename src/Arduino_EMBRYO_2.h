@@ -15,8 +15,8 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _Embryo_II_h
-#define _Embryo_II_h
+#ifndef Arduino_EMBRYO_2_h
+#define Arduino_EMBRYO_2_h
 
 #include "Arduino.h"
 #include "math.h"
@@ -55,7 +55,7 @@ class StepMotor {
     bool readBtnEmergencyStop(void);
     void checkInputs(void);
     // Set and Read steps
-    bool setTotalSteps(uint32_t totalSteps);
+    void setTotalSteps(uint32_t totalSteps);
     uint32_t getTotalSteps(void);
     // Structure
     void setLength(uint8_t maxLength);
