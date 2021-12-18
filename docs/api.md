@@ -1,10 +1,10 @@
-# Arduino Embryo 2 library
+# Arduino EMBRYO 2 library
 
 ## StepMotor
 
 ### `StepMotor()`
 
-This function creates an instance of StepMotor Class for Embryo 2 that represent a linear axis of the robot. Use it at the top of your sketch, above `setup()` and `loop()`.
+This function creates an instance of StepMotor Class for EMBRYO 2 that represent a linear axis of the robot. Use it at the top of your sketch, above `setup()` and `loop()`.
 
 #### Syntax
 
@@ -1203,7 +1203,7 @@ void loop() {}
 
 ### `Embryo()`
 
-This function creates an instance of Embryo Class to control two axis of Embryo 2. Use it at the top of your sketch, above `setup()` and `loop()` and after the two axis StepMotor instance.
+This function creates an instance of Embryo Class to control two axis of EMBRYO 2. Use it at the top of your sketch, above `setup()` and `loop()` and after the two axis StepMotor instance.
 
 #### Syntax
 
@@ -1297,7 +1297,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {};
   robot.begin();   // Initializes two axis and configures interruptions pins
-  robot.end();     // Disable Arduino Embryo 2
+  robot.end();     // Disable Arduino EMBRYO 2
 }
 void loop() {}
 ```
@@ -1434,7 +1434,7 @@ void loop() {
 
 ### `toStepXY()`
 
-Moves the robot the X and the Y carriages to a specified step count in each axis. Zero is in the motor home position and max number of steps is in the axis end far from the motor home.
+Moves the EMBRYO 2 educational modular machine the X and the Y carriages to a specified step count in each axis. Zero is in the motor home position and max number of steps is in the axis end far from the motor home.
 
 #### Syntax
 
@@ -1488,7 +1488,7 @@ void loop() {
 
 ### `drawLine()`
 
-Draws a line with both axis of Embryo 2.
+Draws a line with both axis of EMBRYO 2.
 
 #### Syntax
 
@@ -1547,7 +1547,7 @@ void loop() {
 
 ### `drawArc()`
 
-Draws an arc with both axis of Embryo 2.
+Draws an arc with both axis of EMBRYO 2.
 
 #### Syntax
 
@@ -1608,7 +1608,7 @@ void loop() {
 
 ### `drawCircle()`
 
-Draws a circle with both axis of Embryo 2.
+Draws a circle with both axis of EMBRYO 2.
 
 #### Syntax
 
