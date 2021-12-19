@@ -1,6 +1,6 @@
 # Arduino EMBRYO 2 library
 
-This library allows Arduino boards to control stepper motors to be used in the **EMBRYO 2** educational modular machine. The linear axis of this machine are controlled with the stepper motor, buttons and switches. Ths library has two classes:
+This library allows Arduino boards to control stepper motors to be used in the **EMBRYO 2** educational modular machine. The linear axis of this machine are controlled with the stepper motor, buttons and switches. This library has two classes:
 - StepMotor class: allows us to control an individual linear axis.
 - Embryo class: allows us to control two coupled linear axis.
 
