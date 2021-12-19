@@ -12,31 +12,42 @@ StepMotor	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-begin	KEYWORD2
-init	KEYWORD2
-end	    KEYWORD2
-start	KEYWORD2
-stop	KEYWORD2
-homing	KEYWORD2
-ready 	KEYWORD2
-moveForward	KEYWORD2
-moveBackward	KEYWORD2
-moveSteps	KEYWORD2
-moveDistance	KEYWORD2
-setStep	KEYWORD2
-setPosition	KEYWORD2
-setSpeed	KEYWORD2
-getStep	KEYWORD2
-getPosition	KEYWORD2
-readBtnForward	KEYWORD2
-readBtnBackward	KEYWORD2
-readBtnInit	KEYWORD2
-readBtnEmergencyStop	KEYWORD2
-readEndstopHome	KEYWORD2
-readEndstopFar	KEYWORD2
-getTotalSteps	KEYWORD2
-setLength	KEYWORD2
-checkInputs	KEYWORD2
+begin   KEYWORD2
+start   KEYWORD2
+end KEYWORD2
+start   KEYWORD2
+startWithoutHoming   KEYWORD2
+play    KEYWORD2
+pause   KEYWORD2
+homing  KEYWORD2
+ready   KEYWORD2
+prepareInterrupt KEYWORD2
+terminateInterrupt KEYWORD2
+moveForward KEYWORD2
+moveBackward    KEYWORD2
+moveSteps   KEYWORD2
+moveDistance    KEYWORD2
+toStep KEYWORD2
+toPosition KEYWORD2
+setSpeed    KEYWORD2
+getStep KEYWORD2
+getPosition KEYWORD2
+readBtnForward  KEYWORD2
+readBtnBackward KEYWORD2
+readBtnStart KEYWORD2
+readBtnEmergencyStop    KEYWORD2
+readEndstopHome KEYWORD2
+readEndstopFar  KEYWORD2
+setTotalSteps   KEYWORD2
+getTotalSteps   KEYWORD2
+setLength   KEYWORD2
+checkInputs KEYWORD2
+
+toStepXY    KEYWORD2
+toPositionXY    KEYWORD2
+drawLine    KEYWORD2
+drawCircle  KEYWORD2
+drawArc KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

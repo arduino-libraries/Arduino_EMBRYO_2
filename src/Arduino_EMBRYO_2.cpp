@@ -16,11 +16,12 @@
 */
 
 #include <Arduino.h>
-#include "Embryo_II.h"
+#include "Arduino_EMBRYO_2.h"
 // Interrupt
 StepMotor* StepMotor::_thisMotor = 0;
+Embryo* Embryo::_thisEmbryo = 0;
 
-StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnInit, uint8_t btnEmergencyStop)
+StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnStart, uint8_t btnEmergencyStop)
 {
   /* Identification */
   _id = id;
@@ -29,7 +30,7 @@ StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_
   _btnBackward = btnBackward;
   _endstopHome = homePin;
   _endstopFar = farPin;
-  _btnInit = btnInit;
+  _btnStart = btnStart;
   _btnEmergencyStop = btnEmergencyStop;
   /* Outputs */
   _enable_pin = enablePin;
@@ -38,10 +39,11 @@ StepMotor::StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_
 
   // Interrupt
   _thisMotor = this;
+
 }
 
 void StepMotor::begin(void){
-  uint8_t _inputPins[6] = {_btnForward, _btnBackward, _btnInit, _btnEmergencyStop, _endstopHome, _endstopFar};
+  uint8_t _inputPins[6] = {_btnForward, _btnBackward, _btnStart, _btnEmergencyStop, _endstopHome, _endstopFar};
   uint8_t _outputPins[3] = {_enable_pin, _direction_pin, _pulse_pin};
   uint8_t _numPinsInput = sizeof(_inputPins) / sizeof(_inputPins[0]);
   uint8_t _numPinsOutput = sizeof(_outputPins) / sizeof(_outputPins[0]);
@@ -55,21 +57,23 @@ void StepMotor::begin(void){
   disableMotor();
 
   //Configure Interruptions
-  attachInterrupt(digitalPinToInterrupt(_btnInit), initISR, RISING);
-  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), stopISR, RISING);
+  prepareInterrupt();
 
   Serial.println("Motor " + String(_id) + " is ON!");
 }
 
-void StepMotor::init(void){
+void StepMotor::start(void){
   _ready = true;
-  start();
+  play();
   _ready = homing();
 }
 
-void StepMotor::initWithoutHoming(void){
+void StepMotor::startWithoutHoming(void){
+  terminateInterrupt();
+  pinMode(_endstopHome, OUTPUT);
+  pinMode(_endstopFar, OUTPUT);
   _ready = true;
-  start();
+  play();
 }
 
 void StepMotor::end(void){
@@ -79,30 +83,34 @@ void StepMotor::end(void){
 }
 
 
-void StepMotor::start(void){
+void StepMotor::play(void){
   if(!_ready)  Serial.println("Motor is not initialized");
   else enableMotor();
 }
 
-void StepMotor::stop(void){
+void StepMotor::pause(void){
   disableMotor();
 }
 
 bool StepMotor::homing(void){
   Serial.println ("Homing axis " + String(_id));
-//  enableMotor();
-  setFarDirection();
+
+  while(!readEndstopHome()){
+    moveBackward();
+  } 
+
+  _totalSteps = 0;
+  
   while(!readEndstopFar()){
-    pulseMotor();
+    moveForward();
+    _totalSteps++;
   }
   Serial.println("Axis " + String (_id) + " - Endstop Far was found.");
-  _totalSteps = 0;
 
-  setHomeDirection();
   while(!readEndstopHome()){
-    pulseMotor();
-    _totalSteps++;
+    moveBackward();
   } 
+
   Serial.println("Axis " + String (_id) + " - Endstop Home was found.");
   Serial.println("Axis " + String(_id) + " - Total steps = " + String(_totalSteps));
 
@@ -115,22 +123,22 @@ bool StepMotor::ready(void) const{
   return _ready;
 }
 
-void StepMotor::enableInterrupt(void){
-  attachInterrupt(digitalPinToInterrupt(_btnInit), initISR, RISING);
-  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), stopISR, RISING);
+void StepMotor::prepareInterrupt(void){
+  attachInterrupt(digitalPinToInterrupt(_btnStart), startISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStop), endISR, RISING);
 }
 
-void StepMotor::disableInterrupt(void){
+void StepMotor::terminateInterrupt(void){
   detachInterrupt(digitalPinToInterrupt(_btnEmergencyStop));
-  detachInterrupt(digitalPinToInterrupt(_btnInit));
+  detachInterrupt(digitalPinToInterrupt(_btnStart));
 }
 
-void StepMotor::initISR(void){
+void StepMotor::startISR(void){
   if(_thisMotor != 0)
-    _thisMotor->init();
+    _thisMotor->start();
 }
 
-void StepMotor::stopISR(void){
+void StepMotor::endISR(void){
   Serial.println("Emergency!");
     _thisMotor->end();
 }
@@ -155,7 +163,10 @@ void StepMotor::pulseMotor(void){
 
 void StepMotor::moveForward(void){
   if(!_ready) return;
-  setFarDirection();
+  if(_dir != _farDir){
+    setFarDirection();
+  }
+    
   if(!readEndstopFar()){
     pulseMotor();
     _currentStep++;
@@ -167,7 +178,10 @@ void StepMotor::moveForward(void){
 
 void StepMotor::moveBackward(void){
   if(!_ready) return;
-  setHomeDirection();
+  if(_dir != _homeDir){
+    setHomeDirection();
+  }
+    
   if(!readEndstopHome()){
     pulseMotor();
     _currentStep--;
@@ -192,15 +206,16 @@ void StepMotor::moveDistance(int32_t distance){
   moveSteps(_step);
 }
 
-void StepMotor::setStep(int32_t step){
+void StepMotor::toStep(int32_t step){
   if (step >= 0 && step <= _totalSteps) {
     moveSteps(step - _currentStep); 
   } else Serial.println("Value is out of range!");
+  if(step == 0) _currentStep = 0;
 }
 
-void StepMotor::setPosition(int32_t position){
+void StepMotor::toPosition(int32_t position){
   uint32_t _step = map(position, 0, _maxLength, 0, _totalSteps);
-  setStep(_step);
+  toStep(_step);
 }
 
 void StepMotor::setSpeed(int32_t speed = 200){
@@ -219,10 +234,12 @@ uint32_t StepMotor::getPosition(void){
 }
 
 void StepMotor::setHomeDirection(void){
+  _dir = _homeDir;
   digitalWrite(_direction_pin, _homeDir); // Set up home direction
 }
 
 void StepMotor::setFarDirection(void){
+  _dir = _farDir;
   digitalWrite(_direction_pin, _farDir); // Set up far from home direction
 }
 
@@ -234,8 +251,8 @@ bool StepMotor::readBtnBackward(void){
   return digitalRead(_btnBackward);
 }
 
-bool StepMotor::readBtnInit(void){
-  return digitalRead(_btnInit);
+bool StepMotor::readBtnStart(void){
+  return digitalRead(_btnStart);
 }
 
 bool StepMotor::readBtnEmergencyStop(void){
@@ -254,12 +271,16 @@ uint32_t StepMotor::getTotalSteps(void){
   return _totalSteps;
 }
 
-bool StepMotor::setTotalSteps(uint32_t totalSteps){
+void StepMotor::setTotalSteps(uint32_t totalSteps){
   _totalSteps = totalSteps;
 }
 
 void StepMotor::setLength(uint8_t maxLength){
   _maxLength = maxLength;
+}
+
+uint8_t StepMotor::getLength(void){
+  return _maxLength;
 }
 
 void StepMotor::checkInputs(void){
@@ -283,17 +304,17 @@ void StepMotor::checkInputs(void){
   
   Serial.println("In common inputs:");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("|\t\tForward Button\t| Backward Button | Init Button\t| Emergency Button |");
-  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnInit()) + "\t|\t " + String(readBtnEmergencyStop()) + "\t   |");
-  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnInit()) + "\t|\t " + String(!readBtnEmergencyStop()) + "\t   |");
+  Serial.println("|\t\tForward Button\t| Backward Button | Start Button | Emergency Button |");
+  Serial.println("| Not Pressed:\t\t" + String(readBtnForward()) + "\t|\t " + String(readBtnBackward()) + "\t  |\t " + String(readBtnStart()) + "\t |\t " + String(readBtnEmergencyStop()) + "\t   |");
+  Serial.println("| Pressed:\t\t" + String(!readBtnForward()) + "\t|\t " + String(!readBtnBackward()) + "\t  |\t "  + String(!readBtnStart()) + "\t |\t " + String(!readBtnEmergencyStop()) + "\t   |");
   Serial.println(" ----------------------------------------------------------------------------------");
-  Serial.println("Press Enter to continue ...");
+  Serial.println("Send any key to continue ...");
   uint8_t _currentForwardPress = !readBtnForward();
   uint8_t _currentBackwardPress = !readBtnBackward();
-  uint8_t _key = '0';
+  uint8_t _key = ' ';
   do{
-    Serial.available() > 0 ? _key = Serial.read() : _key = '0';
-  }while(_key != '\n');
+    Serial.available() > 0 ? _key = Serial.read() : _key = ' ';
+  }while(_key == ' ');
   Serial.println("==============================");
   if(_currentHomePress != _defaultHomePress){
     Serial.println("The boolean values of ENDSTOP HOME are different from the expected values.");
@@ -311,4 +332,129 @@ void StepMotor::checkInputs(void){
     Serial.println("The boolean values of BACKWARD BUTTON are different from the expected values.");
     Serial.println("Your robot won't work properly :( ");
   } else Serial.println("BACKWARD BUTTON is OK.");
+}
+
+Embryo::Embryo(StepMotor& axisX, StepMotor& axisY, uint8_t btnStart, uint8_t btnEmergencyStop)
+{
+  _axisX = &axisX;
+  _axisY = &axisY;
+  _btnStartEmbryo = btnStart;
+  _btnEmergencyStopEmbryo = btnEmergencyStop;
+
+  // Interrupt
+  _thisEmbryo = this;
+}
+
+void Embryo::begin(){
+  _axisX->begin();
+  _axisX->terminateInterrupt();
+  _axisY->begin();
+  _axisY->terminateInterrupt();
+  prepareInterrupt();
+}
+
+void Embryo::start(){
+  _axisX->start();
+  _axisY->start();
+}
+
+void Embryo::end(void){
+  _axisX->end();
+  _axisY->end();
+  Serial.println("Stopped embryo");
+}
+
+bool Embryo::ready(void){
+  return (_axisX->ready() && _axisY->ready());
+}
+
+void Embryo::prepareInterrupt(void){
+  attachInterrupt(digitalPinToInterrupt(_btnStartEmbryo), startISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(_btnEmergencyStopEmbryo), endISR, RISING);
+}
+
+void Embryo::terminateInterrupt(void){
+  detachInterrupt(digitalPinToInterrupt(_btnEmergencyStopEmbryo));
+  detachInterrupt(digitalPinToInterrupt(_btnStartEmbryo));
+}
+
+void Embryo::startISR(void){
+  if(_thisEmbryo != 0)
+    _thisEmbryo->start();
+}
+
+void Embryo::endISR(void){
+  Serial.println("Emergency!");
+    _thisEmbryo->end();
+}
+
+void Embryo::setLengthXY(uint8_t lengthX, uint8_t lengthY){
+  _axisX->setLength(lengthX);
+  _axisY->setLength(lengthY);
+}
+
+void Embryo::toPositionXY(uint8_t positionX, uint8_t positionY){
+  uint8_t _positionX = positionX;
+  uint8_t _positionY = positionY;
+  _axisX->toPosition(_positionX);
+  _axisY->toPosition(_positionY);
+}
+
+void Embryo::toStepXY(uint32_t stepX, uint32_t stepY){
+  uint32_t _stepX = stepX;
+  uint32_t _stepY = stepY;
+  _axisX->toStep(_stepX);
+  _axisY->toStep(_stepY);
+}
+
+void Embryo::drawLine(uint8_t initialPositionX, uint8_t initialPositionY, uint8_t finalPositionX, uint8_t finalPositionY){
+  uint8_t _resolution = 50000;
+  uint8_t _initialPositionX = initialPositionX;
+  uint8_t _initialPositionY = initialPositionY;
+  uint8_t _finalPositionX = finalPositionX;
+  uint8_t _finalPositionY = finalPositionY;
+  
+  
+  uint32_t _initialStepX = map(_initialPositionX, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
+  uint32_t _initialStepY = map(_initialPositionY, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
+  uint32_t _finalStepX = map(_finalPositionX, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
+  uint32_t _finalStepY = map(_finalPositionY, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
+
+  int32_t hX = ((float)_finalStepX - (float)_initialStepX)/(_resolution - 1);
+  int32_t hY = ((float)_finalStepY - (float)_initialStepY)/(_resolution - 1);
+
+  for(int i = 0; i < _resolution; i++){
+    toStepXY(_initialStepX + (hX*i), _initialStepY + (hY*i));
+  }
+}
+
+void Embryo::drawCircle(uint8_t centerX, uint8_t centerY, uint8_t radius){
+  uint8_t _radius = radius;
+  uint8_t _centerX = centerX;
+  uint8_t _centerY = centerY;
+  drawArc(_centerX, _centerY, _radius, 0.0, 360.0);
+}
+
+void Embryo::drawArc(uint8_t centerX, uint8_t centerY, uint8_t radius, float initialAngle, float finalAngle){
+  uint8_t _radius = radius;
+  uint8_t _centerX = centerX;
+  uint8_t _centerY = centerY;
+  float _initialAngle = initialAngle;
+  float _finalAngle = finalAngle;
+
+  uint32_t _centerStepX = map(_centerX, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
+  uint32_t _centerStepY = map(_centerY, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
+  uint32_t _radiusStepX = map(_radius, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
+  uint32_t _radiusStepY = map(_radius, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
+  uint32_t _initialStepX = map(_centerX + _radius, 0, _axisX->getLength(), 0, _axisX->getTotalSteps());
+  uint32_t _initialStepY = map(_centerY, 0, _axisY->getLength(), 0, _axisY->getTotalSteps());
+  
+  // toStepXY(_initialStepX, _initialStepY);
+
+  for(float _i = _initialAngle; _i<= _finalAngle; _i++){
+    double _radians = (3.14159*_i)/180.0;
+    uint32_t _x = _radiusStepX*cos(_radians) + _centerStepX;
+    uint32_t _y = _radiusStepY*sin(_radians) + _centerStepY;
+    toStepXY(_x, _y);
+  }
 }
