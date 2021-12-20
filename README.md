@@ -16,8 +16,8 @@ This library accompanies 5 free Arduino lessons available at [skills.move](https
 
 1. Navigate to the latest Release page: https://github.com/arduino-libraries/Arduino_Embryo/releases/latest
 2. Download the library from the "**Source code (zip)**" link.
-3. Extract the zip file in the `libraries` folder of your Arduino Sketchbook
-4. In the Arduino IDE, navigate to File > Sketchbook > EMBRYO-X.Y.Z
+3. In the Arduino Offline IDE, navigate to Sketch > Include Library > Add .ZIP Library. At the top of the drop down list, select the option to "Add .ZIP Library".
+4. The Library will be available to use in sketches and will be exposed in the File > Examples > Arduino_EMBRYO_2
 
 ## Features
 
