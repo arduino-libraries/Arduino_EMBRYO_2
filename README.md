@@ -10,7 +10,7 @@ The assembly instructions and lasercut .dxf files can be found [here]().
 
 This library accompanies 5 free Arduino lessons available at [skills.move](https://www.skillsmove.eu/). The lessons are written for pupils in the ages of 14-16, and aims to introduce them to manufacturing by building their own modular machine.
 
-**Note:** This library will only be maintained by it's users and not by Arduino from January 2022.
+**Note:** This library will only be maintained by its users and not by Arduino from January 2022.
 
 ## Installation 
 
