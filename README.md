@@ -53,8 +53,178 @@ This is an example of how code can be built iteratively around a certain machine
 
 There are many examples implemented in this repository. Below are shown some of the examples.
 
-``` C++
+In this first example, the motor should move a specific amount of steps (20000), stop, then move again for 15000 steps.
 
+```arduino
+#include "Arduino_EMBRYO_2.h"
+
+/* I N I T I A L   D E F I N I T I O N S */
+#define motor01      1
+
+/* C O N S T A N T S   A N D   V A R I A B L E S */
+const int enablePin = A5;      // Enable Pin
+const int DirPin = 12;         // Direction Pin for motor01
+const int PulPin = A4;         // Step Pin for motor01
+const int ForwardPin  = A2;    // Forward Button for motor01
+const int BackwardPin = A1;    // Backward Button for motor01
+
+const int startPin = 2;        // Start Button
+const int emergencyPin  = 5;   // Emergency Button
+const int HomeEndstop = 3;     // Home endstop
+const int FarEndstop = 4;      // Far From Home endstop
+
+long steps = 0;
+
+// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency)
+StepMotor motor(motor01,
+                enablePin,
+                DirPin,
+                PulPin,
+                HomeEndstop,
+                FarEndstop,
+                ForwardPin,
+                BackwardPin,
+                startPin,
+                emergencyPin);
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);         // Configure and start Serial Communication
+  while (!Serial) {};         // Wait to open the serial monitor
+
+  motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
+  motor.startWithoutHoming(); // Initialize the motor separately without being part of an axis
+
+  Serial.println("To start, send any key to serial ...");
+
+  // Without this instruction the motor will move after the upload (It is dangerous)
+  while((Serial.available() <= 0)){};
+
+  motor.setTotalSteps(50000); // Set the max step of the motor
+  Serial.println("Motor moves.");
+  motor.moveSteps(20000);     // Motor moves
+
+  motor.pause();              // Pause the motor
+  Serial.println("Motor does not move.");
+  motor.moveSteps(50);        // Motor does not move
+  delay(2000);
+  
+  motor.play();               // Enable motor
+  Serial.println("Motor moves.");
+  motor.moveSteps(15000);     // Motor moves again
+}
+void loop() {}
+```
+
+In this second example, it is possible to control the motor's direction of spinning using two of the buttons that we connected earlier.
+
+```arduino
+#include "Arduino_EMBRYO_2.h"
+
+/* I N I T I A L   D E F I N I T I O N S */
+#define motor01      1
+
+/* C O N S T A N T S   A N D   V A R I A B L E S */
+const int enablePin = A5;      // Enable Pin
+const int DirPin = 12;         // Direction Pin for motor01
+const int PulPin = A4;         // Step Pin for motor01
+const int ForwardPin  = A2;    // Forward Button for motor01
+const int BackwardPin = A1;    // Backward Button for motor01
+
+const int startPin = 2;        // Start Button
+const int emergencyPin  = 5;   // Emergency Button
+const int HomeEndstop = 3;     // Home endstop
+const int FarEndstop = 4;      // Far From Home endstop
+
+long steps = 0;
+
+// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency)
+StepMotor motor(motor01,
+                enablePin,
+                DirPin,
+                PulPin,
+                HomeEndstop,
+                FarEndstop,
+                ForwardPin,
+                BackwardPin,
+                startPin,
+                emergencyPin);
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);          // Configure and start Serial Communication
+  while (!Serial) {};          // Wait to open the serial monitor
+  
+  motor.begin();               // Configure inputs pins, outputs pins and interruptions pins
+  motor.startWithoutHoming();  // Initialize the motor without homing procedure, detached
+                               // interruptions pins and configures endstops as OUTPUT
+                               // Use this function only with the motor outside the axis
+} 
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  // Check the forward button signal
+  if(motor.readBtnForward() == HIGH)
+    motor.moveForward();        // Motor rotates clockwise
+
+  // Check the backward button signal
+  if(motor.readBtnBackward() == HIGH)
+    motor.moveBackward();       // Motor rotates anticlockwise
+}
+```
+
+In the last example, you have to press the start button to start the homing procedure. This allows the machine to send the carriage first to the end point and back to "home" position, then calculate the number of steps it took to determine the length of the axis.
+
+```arduino
+#include "Arduino_EMBRYO_2.h"
+/* I N I T I A L    D E F I N E S */
+#define X_AXIS      1
+
+/*C O N S T A N T S   A N D   V A R I A B L E S*/
+const int enablePin = A5;       // Enable Pin
+const int DirPin = 5;           // Direction Pin X-axis
+const int PulPin = 6;           // Step Pin X-axis
+const int BackwardPin = A1;     // Backward Button X-axis
+const int ForwardPin  = A2;     // Forward Button X-axis
+const int startPin = 2;         // Start Button
+const int emergencyPin  = 5;    // Emergency Button
+const int HomeEndstop = 3;      // Home endstop X-axis
+const int FarEndstop = 4;       // Far From Home endstop X-axis
+
+// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+StepMotor axis(X_AXIS,
+                enablePin,
+                DirPin,
+                PulPin,
+                HomeEndstop,
+                FarEndstop,
+                ForwardPin,
+                BackwardPin,
+                startPin,
+                emergencyPin);
+
+void setup() {
+  Serial.begin(9600);           // Configure and start Serial Communication
+  while (!Serial) {};           // Wait to open the serial monitor
+
+  axis.begin();                 // Configure inputs pins, outputs pins and interruptions pins
+  
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready());         // Wait for Start button to be pressed
+                                // The start button is attached to the interrupt
+                                // service routine that enables the motor and runs
+                                // the homing procedure
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+  // Check the forward button signal
+  if(axis.readBtnForward() == HIGH)
+    axis.moveForward();  // Motor rotates clockwise
+
+  // Check the backward button signal
+  if(axis.readBtnBackward() == HIGH)
+    axis.moveBackward(); // Motor rotates anticlockwise
+}
 ```
 
 ## Versions
