@@ -10,6 +10,14 @@ The assembly instructions and lasercut .dxf files can be found [here]().
 
 This library accompanies 5 free Arduino lessons available at [skills.move](https://www.skillsmove.eu/). The lessons are written for pupils in the ages of 14-16, and aims to introduce them to manufacturing by building their own modular machine.
 
+To find the lessons, navigate to [skills.move](https://www.skillsmove.eu/) and search for "Arduino". The lessons for this library are called:
+
+* Introduction to sensors and their principles
+* Motion control + Arduino programming I
+* Motion control + Arduino programming II
+* Practicum 4: Single motor programming
+* Practicum 4: Single motor programming
+
 **Note:** This library will only be maintained by its users and not by Arduino from January 2022.
 
 ## Installation 
