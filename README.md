@@ -83,7 +83,7 @@ const int FarEndstop = 4;      // Far From Home endstop
 
 long steps = 0;
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency)
+/* Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency) */
 StepMotor motor(motor01,
                 enablePin,
                 DirPin,
@@ -100,7 +100,7 @@ void setup() {
   Serial.begin(9600);         // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
 
-  motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
+  motor.begin();              // Configure inputs pins, outputs pins and interruptions pins
   motor.startWithoutHoming(); // Initialize the motor separately without being part of an axis
 
   Serial.println("To start, send any key to serial ...");
@@ -146,7 +146,7 @@ const int FarEndstop = 4;      // Far From Home endstop
 
 long steps = 0;
 
-// Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency)
+/* Construct object, Embryo(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency) */
 StepMotor motor(motor01,
                 enablePin,
                 DirPin,
@@ -199,7 +199,7 @@ const int emergencyPin  = 5;    // Emergency Button
 const int HomeEndstop = 3;      // Home endstop X-axis
 const int FarEndstop = 4;       // Far From Home endstop X-axis
 
-// Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button)
+/* Construct object, StepMotor(Axis, Enable Pin, Direction Pin, Pulse Pin, Endstop Home, Endstop Far, Forward Button, Backward Button, Start Button, Emergency Stop Button) */
 StepMotor axis(X_AXIS,
                 enablePin,
                 DirPin,
