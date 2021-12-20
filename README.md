@@ -16,7 +16,7 @@ To find the lessons, navigate to [skills.move](https://www.skillsmove.eu/) and s
 * Motion control + Arduino programming I
 * Motion control + Arduino programming II
 * Practicum 4: Single motor programming
-* Practicum 4: Single motor programming
+* Practicum 5: Multi motor programming
 
 **Note:** This library will only be maintained by its users and not by Arduino from January 2022.
 
