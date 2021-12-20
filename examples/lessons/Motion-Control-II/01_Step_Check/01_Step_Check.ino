@@ -34,7 +34,7 @@ void setup() {
   Serial.begin(9600);         // Configure and start Serial Communication
   while (!Serial) {};         // Wait to open the serial monitor
 
-  motor.begin();              // Configure inputs pins, outputs pins and interuptions pins
+  motor.begin();              // Configure inputs pins, outputs pins and interruptions pins
   motor.startWithoutHoming(); // Initialize the motor separately without being part of an axis
 
   Serial.println("To start, send any key to serial ...");
