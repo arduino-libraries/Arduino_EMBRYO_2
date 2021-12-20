@@ -32,7 +32,7 @@ jobs:
 
       matrix:
         board:
-          - fqbn: arduino:megaavr:uno2018
+          - fqbn: arduino:avr:uno
 
     steps:
       - name: Checkout
@@ -48,11 +48,25 @@ jobs:
             - source-path: ./
             # Install library dependencies.
           sketch-paths: |
-            # Sketches to compile
-            - './examples/'
-
+            - './examples/lessons/Motion-Control-II/01_Step_Check/01_Step_Check.ino'
+            - './examples/lessons/Motion-Control-II/02_Step_Control/02_Step_Control.ino'
+            - './examples/lessons/Motion-Control-II/03_Direction_Control/03_Direction_Control.ino'
+            - './examples/lessons/Motion-Control-II/04_Speed_Control/04_Speed_Control.ino'
+            - './examples/lessons/Multi-Motor/01_Check_Inputs_Two_Axis/01_Check_Inputs_Two_Axis.ino'
+            - './examples/lessons/Multi-Motor/02_Manual_Control_Two_Axis/02_Manual_Control_Two_Axis.ino'
+            - './examples/lessons/Multi-Motor/03_toStepXY_Two_Axis/03_toStepXY_Two_Axis.ino'
+            - './examples/lessons/Multi-Motor/04_toPositionXY_Two_Axis/04_toPositionXY_Two_Axis.ino'
+            - './examples/lessons/Multi-Motor/05_Draw_Lines/05_Draw_Lines.ino'
+            - './examples/lessons/Multi-Motor/06_Draw_Rectangle/06_Draw_Rectangle.ino'
+            - './examples/lessons/Multi-Motor/07_Draw_Circle/07_Draw_Circle.ino'
+            - './examples/lessons/Single-Motor/01_Check_Inputs/01_Check_Inputs.ino'
+            - './examples/lessons/Single-Motor/02_Homing_procedure/02_Homing_procedure.ino'
+            - './examples/lessons/Single-Motor/03_Move_To_Step/03_Move_To_Step.ino'
+            - './examples/lessons/Single-Motor/04_Move_To_Position/04_Move_To_Position.ino'
+            - './examples/lessons/Single-Motor/05_Ultrasonic_Sensor/05_Ultrasonic_Sensor.ino'
             
-          enable-deltas-report: true
+            
+          enable-deltas-report: false
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
 
       - name: Save memory usage change report as artifact

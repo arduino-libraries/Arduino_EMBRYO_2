@@ -1,43 +1,43 @@
-# Embryo II library
+# Arduino EMBRYO 2 library
 
-## Methods
+## StepMotor
 
-### `StepMotor(uint8_t id, uint8_t enablePin, uint8_t directionPin, uint8_t pulsePin, uint8_t homePin, uint8_t farPin, uint8_t btnForward, uint8_t btnBackward, uint8_t btnInit, uint8_t btnEmergencyStop)`
+### `StepMotor()`
 
-Attaches the motor and controls buttons to the pins.
+This function creates an instance of StepMotor Class for EMBRYO 2 that represent a linear axis of the robot. Use it at the top of your sketch, above `setup()` and `loop()`.
 
 #### Syntax
 
 ```
-StepMotor axis(AXIS_ID,
-               enablePin,
-               DirectionPin,
-               PulsePin,
-               HomeEndstop,
-               FarEndstop,
-               ForwardPin,
-               BackwardPin,
-               initPin,
-               emergencyStopPin);
+StepMotor(AXIS_ID,
+          enablePin,
+          directionPin,
+          pulsePin,
+          homePin,
+          farPin,
+          forwardPin,
+          backwardPin,
+          startPin,
+          emergencyStopPin);
 ```
 
 #### Parameters
 
 -   AXIS_ID: motor unique ID (numeric)
 -   enablePin: Pin connected to motor enable pin
--   DirectionPin: Pin connected to motor direction pin
--   PulsePin: Pin connected to motor pulse pin
--   HomeEndstop: Pin connected to home position endstop switch
--   FarEndstop: Pin connected to far from home endstop switch
--   ForwardPin: Pin connected to forward button
--   BackwardPin: Pin connected to backward button
--   initPin: Pin connected to initialization button
+-   directionPin: Pin connected to motor direction pin
+-   pulsePin: Pin connected to motor pulse pin
+-   homePin: Pin connected to home position endstop switch
+-   farPin: Pin connected to far from home endstop switch
+-   forwardPin: Pin connected to forward button
+-   backwardPin: Pin connected to backward button
+-   startPin: Pin connected to initialization button
 -   emergencyStopPin: Pin connected to emergency stop button
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
@@ -51,10 +51,11 @@ void loop() {}
 -   [begin()](#begin)
 -   [checkInputs()](#checkInputs)
 -   [end()](#end)
+-   [start()](#start)
 
 ### `begin()`
 
-Configures inputs pins, outputs pins and interuptions pins, and sets serial communication with baud rate 115200bps.
+Configures inputs pins, outputs pins and interruptions pins.
 
 #### Syntax
 
@@ -65,14 +66,14 @@ axis.begin()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
-  axis.begin();
+  axis.begin();   // Configure inputs pins, outputs pins and interruptions pins
 }
 void loop() {}
 ```
@@ -80,35 +81,35 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
+-   [play()](#play)
+-   [pause()](#pause)
+-   [prepareInterrupt()](#prepareInterrupt)
 -   [start()](#start)
--   [stop()](#stop)
 
-### `init()`
+### `start()`
 
 Initializes the motor.
 
-Enables and starts the motor, then the motor is setted as ready. If the function receives true or nothing as argument, it does the homing procedure, otherwise it does not. This function is associated with the Init Button ISR.
+Enables and starts the motor, then the motor is set as ready and does the homing procedure. This function is associated with the Start Button ISR.
 
 #### Syntax
 
 ```
-axis.init()
+axis.start()
 ```
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);  // Initialize motor without homing procedure
-  axis.homing();     // Does the home procedure
+  axis.start();  // Initialize motor and run the homing procedure
 }
 void loop() {}
 ```
@@ -117,9 +118,49 @@ void loop() {}
 
 -   [end()](#end)
 -   [homing()](#homing)
+-   [pause()](#pause)
+-   [play()](#play)
+-   [ready()](#ready)
+-   [startWithoutHoming()](#startWithoutHoming)
+
+### `startWithoutHoming()`
+
+Initializes the motor.
+
+Enables and starts the motor, then the motor is set as ready but it doesn't run the homing procedure. Use this function only with the motor outside the axis.
+
+#### Syntax
+
+```
+axis.startWithoutHoming()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  axis.begin();
+  axis.startWithoutHoming();  // Initialize motor without homing procedure
+  axis.homing();              // Run the home procedure
+}
+void loop() {}
+```
+
+#### See also
+
+-   [end()](#end)
+-   [homing()](#homing)
+-   [play()](#play)
+-   [pause()](#pause)
 -   [ready()](#ready)
 -   [start()](#start)
--   [stop()](#start)
+-   [terminateInterrupt()](#terminateInterrupt)
 
 ### `end()`
 
@@ -134,15 +175,15 @@ axis.end()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   axis.end();
 }
 void loop() {}
@@ -150,40 +191,40 @@ void loop() {}
 
 #### See also
 
--   [init()](#init)
+-   [play()](#play)
+-   [pause()](#pause)
 -   [ready()](#ready)
 -   [start()](#start)
--   [stop()](#stop)
 
-### `start()`
+### `play()`
 
 Enables the motor if the motor is initialized.
 
 #### Syntax
 
 ```
-axis.start()
+axis.play()
 ```
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   delay(500);
-  axis.moveSteps(50); // Motor moves
-  axis.stop();        // Disable motor
-  axis.moveSteps(50); // Motor does not move
+  axis.moveSteps(50);  // Motor moves
+  axis.pause();        // Disable motor
+  axis.moveSteps(50);  // Motor does not move
   delay(500);
-  axis.start();       // Enable motor
-  axis.moveSteps(50); // Motor moves again
+  axis.play();         // Enable motor
+  axis.moveSteps(50);  // Motor moves again
 }
 void loop() {}
 ```
@@ -191,39 +232,39 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [moveSteps()](#moveSteps)
--   [stop()](#stop)
+-   [pause()](#pause)
+-   [start()](#start)
 
-### `stop()`
+### `pause()`
 
 Disables the motor.
 
 #### Syntax
 
 ```
-axis.stop()
+axis.pause()
 ```
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init();
+  axis.start();
   delay(500);
-  axis.moveSteps(50); // Motor moves
-  axis.stop();        // Disable motor
-  axis.moveSteps(50); // Motor does not move
+  axis.moveSteps(50);  // Motor moves
+  axis.pause();        // Disable motor
+  axis.moveSteps(50);  // Motor does not move
   delay(500);
-  axis.start();       // Enable motor
-  axis.moveSteps(50); // Motor moves again
+  axis.play();         // Enable motor
+  axis.moveSteps(50);  // Motor moves again
 }
 void loop() {}
 ```
@@ -231,8 +272,8 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [moveSteps()](#moveSteps)
+-   [play()](#play)
 -   [start()](#start)
 
 ### `homing()`
@@ -248,16 +289,16 @@ axis.homing()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);  // Initialize motor without homing procedure
-  axis.homing();     // Does the home procedure
+  axis.startWithoutHoming();  // Initialize motor without homing procedure
+  axis.homing();              // Run the home procedure
 }
 void loop() {}
 ```
@@ -265,14 +306,14 @@ void loop() {}
 #### See also
 
 -   [end()](#end)
--   [init()](#init)
 -   [readEndstopFar()](#readEndstopFar)
 -   [readEndstopHome()](#readEndstopHome)
--   [start()](#stop)
+-   [start()](#start)
+-   [startWithoutHoming()](#startWithoutHoming)
 
 ### `ready()`
 
-Executes the homing procedure, but it doesn't set the motor as ready.
+Returns a boolean value that indicates if the motor is ready.
 
 #### Syntax
 
@@ -283,16 +324,19 @@ axis.ready()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready());  // Wait for Start button to be pressed
+                         // The start button is attached to the interrupt
+                         // service routine that enables the motor and runs
+                         // the homing procedure
   axis.moveSteps(50);    // Motor 50 steps
 }
 void loop() {}
@@ -302,8 +346,80 @@ void loop() {}
 
 -   [begin()](#begin)
 -   [end()](#end)
--   [init()](#init)
 -   [moveStep()](#moveStep)
+-   [start()](#start)
+
+### `prepareInterrupt()`
+
+Attaches to interrupt pins of the start and emergency stop buttons.
+
+#### Syntax
+
+```
+axis.prepareInterrupt()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  axis.begin();
+  terminateInterrupt();  // Detach the interrupt pins
+  prepareInterrupt();  // Attach the interrupt pins
+}
+void loop() {
+  if(axis.readBtnForward()) axis.moveForward();
+  if(axis.readBtnBackward()) axis.moveBackward();
+}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [prepareInterrupt()](#prepareInterrupt)
+-   [teminateInterrupt()](#teminateInterrupt)
+
+### `terminateInterrupt()`
+
+Detaches to interrupt pins of the start and emergency stop buttons.
+
+#### Syntax
+
+```
+axis.terminateInterrupt()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  axis.begin();
+  terminateInterrupt();  // Detach the interrupt pins
+  prepareInterrupt();  // Attach the interrupt pins
+}
+void loop() {
+  if(axis.readBtnForward()) axis.moveForward();
+  if(axis.readBtnBackward()) axis.moveBackward();
+}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [prepareInterrupt()](#prepareInterrupt)
+-   [teminateInterrupt()](#teminateInterrupt)
 
 ### `moveForward()`
 
@@ -318,12 +434,12 @@ axis.moveForward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Press Init Button to start the machine");
@@ -356,16 +472,16 @@ axis.moveBackward()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -391,19 +507,23 @@ Rotates the motor a specified number of steps. Positive step rotates the motor i
 axis.moveSteps(numSteps)
 ```
 
+#### Parameters
+
+* _numSteps_: number of the steps
+
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveSteps(50);
@@ -418,7 +538,7 @@ void loop() {
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnForward()](#readBtnForward)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `moveDistance()`
 
@@ -430,19 +550,23 @@ Rotates the motor and move the robot carriage a specified distance in centimeter
 axis.moveDistance(distance)
 ```
 
+#### Parameters
+
+* _distance_: distance in centimeters 
+
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveDistance(5);
@@ -456,34 +580,37 @@ void loop() {
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnForward()](#readBtnForward)
 -   [ready()](#ready)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
-### `setStep()`
+### `toStep()`
 
-Moves the robot carriage to a specified step count. Zero is the motor home position and max number of steps is the axis end far from the motor home.
+Moves the robot carriage to a specified step count. Zero is in the motor home position and max number of steps is in the axis end far from the motor home.
 
 #### Syntax
 
 ```
-axis.setStep(step)
+axis.toStep(step)
 ```
+#### Parameters
+
+* _step_: position in step counts with home equals to zero
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
   Serial.println("Current step: " + String(axis.getStep()));
   delay(1000);
-  axis.setStep(1000);
+  axis.toStep(1000);
   Serial.println("Current step: " + String(axis.getStep()));
 }
 void loop() {}
@@ -494,34 +621,38 @@ void loop() {}
 -   [getStep()](#getStep)
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
-### `setPosition()`
+### `toPosition()`
 
 Moves the robot carriage to a specified position in centimeters along the robot axis. Zero is the motor home position and max position is in the axis end far from the motor home and is equal to the length of the axis.
 
 #### Syntax
 
 ```
-axis.setPosition(position)
+axis.toPosition(position)
 ```
+
+#### Parameters
+
+* _position_: position in centimeters with home equals to zero
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
-  Serial.println("Intial position: " + String(axis.getPosition()));
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
+  Serial.println("Initial position: " + String(axis.getPosition()));
   delay(1000);
-  axis.setPosition(15);
+  axis.toPosition(15);
   Serial.println("Final position: " + String(axis.getPosition()));
 }
 void loop() {}
@@ -533,34 +664,37 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [ready()](#ready)
 -   [setLength()](#setLength)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `setSpeed()`
 
-Sets the motor's speed, in milliseconds, according to the time between pulses. The maximun speed is 200 milliseconds and the minimun speed is 25000 milliseconds. The default speed value is 200 milliseconds.
+Sets the motor's speed, in milliseconds, according to the time between pulses. This value is the motor's time to make a half step. The maximum speed is 200 milliseconds and the minimum speed is 25000 milliseconds. The default speed value is 200 milliseconds.
 
 #### Syntax
 
 ```
 axis.setSpeed(speed)
 ```
+#### Parameters
+
+* _speed_: time in milliseconds between pulses (defaults to 200)
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  axis.init(false);     // Initialize without homing
-  axis.setSpeed(7000);  // The motor moves slower
+  axis.startWithoutHomming();  // Initialize the motor without homing procedure
+  axis.setSpeed(7000); // The motor moves slower
   for (int i = 0; i < 20000; i++)axis.moveForward();
   delay(1000);
-  axis.setSpeed();      // The motor moves in the default speed
+  axis.setSpeed(); // The motor moves in the default speed, 200 milliseconds
   for (int i = 0; i < 20000; i++)axis.moveBackward();
   delay(1000);
   axis.stop();
@@ -574,7 +708,7 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `getStep()`
 
@@ -585,23 +719,26 @@ Returns the current step count of the motor.
 ```
 axis.getStep()
 ```
+#### Returns
+
+The current step count with home equals to zero.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
   Serial.println("Current step: " + String(axis.getStep()));
   delay(1000);
-  axis.setStep(1000);
+  axis.toStep(1000);
   Serial.println("Current step: " + String(axis.getStep()));
 }
 void loop() {}
@@ -611,7 +748,7 @@ void loop() {}
 
 -   [moveSteps()](#moveSteps)
 -   [ready()](#ready)
--   [setStep()](#setStep)
+-   [toStep()](#toStep)
 
 ### `getPosition()`
 
@@ -623,21 +760,25 @@ Returns the current position of the robot carriage in centimeters.
 axis.getPosition()
 ```
 
+#### Returns
+
+The current distance in centimeters from motor home position.
+
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for start button to be pressed
   delay(1000);
-  Serial.println("Intial position: " + String(axis.getPosition()));
+  Serial.println("Initial position: " + String(axis.getPosition()));
   delay(1000);
   axis.setPosition(15);
   Serial.println("Final position: " + String(axis.getPosition()));
@@ -651,7 +792,7 @@ void loop() {}
 -   [moveDistance()](#moveDistance)
 -   [ready()](#ready)
 -   [setLength()](#setLength)
--   [setPosition()](#setPosition)
+-   [toPosition()](#toPosition)
 
 ### `readBtnForward()`
 
@@ -662,20 +803,23 @@ Returns the boolean value in the pin connected to the Forward Button.
 ```
 axis.readBtnForward()
 ```
+#### Returns
+
+The forward button signal: LOW or HIGH.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -698,20 +842,23 @@ Returns the boolean value in the pin connected to the Backward Button.
 ```
 axis.readBtnBackward()
 ```
+#### Returns
+
+The backward button signal: LOW or HIGH.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Press Init Button to start the machine");
-  while(!axis.ready()); // Wait for Init button to be pressed
+  Serial.println("Press the Start Button to start the machine");
+  while(!axis.ready()); // Wait for Start button to be pressed
 }
 void loop() {
   if(axis.readBtnForward()) axis.moveForward();
@@ -725,37 +872,40 @@ void loop() {
 -   [moveForward()](#moveForward)
 -   [readBtnForward()](#readBtnForward)
 
-### `readBtnInit()`
+### `readBtnStart()`
 
-Returns the boolean value in the pin connected to the Init Button. This button invokes the initialization ISR and the init() method.
+Returns the boolean value in the pin connected to the Start Button. This button invokes the initialization ISR and the start() method.
 
 #### Syntax
 
 ```
-axis.readBtnInit()
+axis.readBtnStart()
 ```
+#### Returns
+
+The start button signal: LOW or HIGH.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
-  Serial.println("Init button logic");
-  Serial.println("Not pressed: " + String(axis.readBtnInit()));
-  Serial.println("Pressed: " + String(!axis.readBtnInit()));
+  Serial.println("Start button logic");
+  Serial.println("Not pressed: " + String(axis.readBtnStart()));
+  Serial.println("Pressed: " + String(!axis.readBtnStart()));
 }
 void loop() {}
 ```
 
 #### See also
 
--   [init()](#init)
+-   [start()](#start)
 -   [ready()](#ready)
 
 ### `readBtnEmergencyStop()`
@@ -767,16 +917,19 @@ Returns the boolean value in the pin connected to the Emergency Stop Button. Thi
 ```
 axis.readBtnEmergencyStop()
 ```
+#### Returns
+
+The emergency stop button signal: LOW or HIGH.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Emergency Stop button logic");
@@ -800,16 +953,19 @@ Returns the boolean value in the pin connected to the Endstop switch in the moto
 ```
 axis.readEndstopHome()
 ```
+#### Returns
+
+The signal of the endstop switch in motor home: LOW or HIGH.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Endstop Home logic");
@@ -829,6 +985,10 @@ void loop() {}
 
 Returns the boolean value in the pin connected to the Endstop switch far from the motor home.
 
+#### Returns
+
+The signal of the endstop switch far from motor home: LOW or HIGH.
+
 #### Syntax
 
 ```
@@ -838,12 +998,12 @@ axis.readEndstopFar()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Endstop Far logic");
@@ -866,22 +1026,26 @@ Sets the total steps count of the motor. The total steps is initialized with 0 a
 #### Syntax
 
 ```
-axis.setTotalSteps()
+axis.setTotalSteps(totalSteps)
 ```
+
+#### Parameters
+
+* _totalSteps_: the maximum step count allowed for the motor.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   motor.init(false);  // Initialize the motor without homing procedure
-  motor.setTotalSteps(50000); // Set the maximun steps of the motor
+  motor.setTotalSteps(50000); // Set the maximum steps of the motor
 }
 void loop() {}
 ```
@@ -902,15 +1066,19 @@ Returns the total steps count of the motor in the robot axis. The total steps is
 axis.getTotalSteps()
 ```
 
+#### Returns
+
+The maximum step count allowed for the motor.
+
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   Serial.println("Total steps initial: " + String(axis.getTotalSteps()));
@@ -933,18 +1101,21 @@ Sets the length of the robot axis in centimeters.
 #### Syntax
 
 ```
-axis.setLength()
+axis.setLength(maxLength)
 ```
+#### Parameters
+
+* _maxLength_: the maximum length of the linear axis in centimeters.
 
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.setLenght(45);
 }
@@ -953,7 +1124,44 @@ void loop() {}
 
 #### See also
 
+-   [getLength()](#getLength)
 -   [moveDistance()](#moveDistance)
+-   [setPosition()](#setPosition)
+
+### `getLength()`
+
+Gets the length of the robot axis in centimeters.
+
+#### Syntax
+
+```
+axis.getLength()
+```
+#### Returns
+
+The maximum length of the liner axis in centimeters.
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  axis.setLenght(45);
+  int length = axis.getLenght();
+  Serial.println("Length: " + String(length));
+}
+void loop() {}
+```
+
+#### See also
+
+-   [moveDistance()](#moveDistance)
+-   [setLength()](#setLength)
 -   [setPosition()](#setPosition)
 
 ### `checkInputs()`
@@ -969,12 +1177,12 @@ axis.checkInputs()
 #### Example
 
 ```
-#include <Embryo_II.h>
+#include <Arduino_EMBRYO_2.h>
 
 StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial) {};
   axis.begin();
   axis.checkInputs();
@@ -987,6 +1195,470 @@ void loop() {}
 -   [readBtnBackward()](#readBtnBackward)
 -   [readBtnEmergencyStop()](#readBtnEmergencyStop)
 -   [readBtnForward()](#readBtnForward)
--   [readBtnInit()](#readBtnInit)
+-   [readBtnStart()](#readBtnStart)
 -   [readEndstopFar()](#readEndstopFar)
 -   [readEndstopHome()](#readEndstopHome)
+
+## Embryo Class Methods
+
+### `Embryo()`
+
+This function creates an instance of Embryo Class to control two axis of EMBRYO 2. Use it at the top of your sketch, above `setup()` and `loop()` and after the two axis StepMotor instance.
+
+#### Syntax
+
+```
+Embryo(axisX, axisY, startPin, emergencyStopPin);
+```
+
+#### Parameters
+
+-   axisX: an object from StepMotor class
+-   axisY: an object form StepMotor class
+-   startPin: Pin connected to initialization button
+-   emergencyStopPin: Pin connected to emergency stop button
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+
+void setup() {}
+void loop() {}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [end()](#end)
+-   [start()](#start)
+
+### `begin()`
+
+Configures inputs pins, outputs pins, and interruptions pins of both axis.
+
+#### Syntax
+
+```
+robot.begin()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.begin();   // Configures pins of the two axis.
+}
+void loop() {}
+```
+
+#### See also
+
+-   [end()](#end)
+-   [start()](#start)
+-   [ready()](#ready)
+
+### `end()`
+
+Disables both axis and sets them as not ready. This function is associated with the Emergency Stop Button ISR.
+
+#### Syntax
+
+```
+robot.end()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.begin();   // Initializes two axis and configures interruptions pins
+  robot.end();     // Disable Arduino EMBRYO 2
+}
+void loop() {}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [start()](#start)
+-   [ready()](#ready)
+
+### `start()`
+
+Initializes the Arduino EMBRYO 2 with two axis. Enables and starts two motors, then the motors are set as ready and does the homing procedure of both of them. This function is associated with the Start Button ISR.
+
+#### Syntax
+
+```
+robot.start()
+```
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.begin();   // Initializes two axis and configures interruptions pins
+  robot.start();   // Enable the axis and does the homing procedure
+}
+void loop() {}
+```
+
+#### See also
+
+-   [begin()](#begin)
+-   [end()](#end)
+-   [ready()](#ready)
+
+### `setLengthXY()`
+
+Sets the length of bth of the robot axis in centimeters.
+
+#### Syntax
+
+```
+robot.setLength(lengthX, lengthY)
+```
+#### Parameters
+
+* _lengthX_: the maximum length of the X-axis in centimeters.
+* _lengthY_: the maximum length of the Y-axis in centimeters.
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axis(1, A5, 5, 6, 3, 4, A2, A1, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+  robot.setLenght(45, 25);
+}
+void loop() {}
+```
+
+#### See also
+
+-   [toPositionXY()](#toPositionXY)
+
+### `toPositionXY()`
+
+Moves the robot carriages to a specified XY position in centimeters along the axis. Zero is the motor home position and max position is in the axis end far from the motor home and is equal to the length of each axis.
+
+#### Syntax
+
+```
+robot.toPositionXY(positionX, positionY)
+```
+
+#### Parameters
+
+* _positionX_: X-axis position in centimeters with home equals to zero
+* _positionY_: Y-axis position in centimeters with home equals to zero
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+unsigned int positionX = 0, positionY = 0;
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+
+  robot.begin();
+
+  Serial.println("Press the Start Button to start the machine");
+  while(!robot.ready());
+}
+void loop() {
+  Serial.println("Enter the number of the position for X-axis: ");
+  while((Serial.available() <= 0)){};
+  positionX = Serial.parseInt(); 
+
+  
+  Serial.println("Enter the number of the position for Y-axis: ");
+  while((Serial.available() <= 0)){};
+  positionY = Serial.parseInt(); 
+
+  robot.toPositionXY(positionX, positionY); 
+}
+```
+
+#### See also
+
+-   [setLengthXY()](#setLengthXY)
+-   [toStepXY()](#toStepXY)
+
+### `toStepXY()`
+
+Moves the EMBRYO 2 educational modular machine the X and the Y carriages to a specified step count in each axis. Zero is in the motor home position and max number of steps is in the axis end far from the motor home.
+
+#### Syntax
+
+```
+robot.toStepXY(stepX, stepY)
+```
+#### Parameters
+
+* _stepX_: X-axis position in step counts with home equals to zero
+* _stepY_: Y-axis position in step counts with home equals to zero
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+unsigned long stepNumX = 0, stepNumY = 0;
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+
+  robot.begin();
+
+  Serial.println("Press the Start Button to start the machine");
+  while(!robot.ready());
+}
+void loop() {
+  Serial.println("Enter the number of the step for X-axis: ");
+  while((Serial.available() <= 0)){};
+  stepNumX = Serial.parseInt(); 
+
+  
+  Serial.println("Enter the number of the step for Y-axis: ");
+  while((Serial.available() <= 0)){};
+  stepNumY = Serial.parseInt(); 
+
+  robot.toStepXY(stepNumX, stepNumY);
+}
+```
+
+#### See also
+
+-   [toPositionXY()](#toPositionXY)
+
+### `drawLine()`
+
+Draws a line with both axis of EMBRYO 2.
+
+#### Syntax
+
+```
+robot.drawline(initialPositionX,
+               initialPositionY,
+               finalPositionX,
+               finalPositionY)
+```
+#### Parameters
+
+* _initialPositionX_: line initial X-axis position.
+* _initialPositionY_: line initial Y-axis position.
+* _finalPositionX_: line final X-axis position.
+* _finalPositionY_: line final Y-axis position.
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {};
+
+  robot.begin();
+
+  robot.setLengthXY(45, 38);
+  
+  Serial.println("Press the Start Button to start the machine");
+  while(!robot.ready());
+  
+  Serial.println("Moving the robot to the initial XY position ...");
+  
+  robot.toPositionXY(5, 5);
+
+  Serial.println("Press the forward button to continue ...");
+}
+void loop() {
+  if(axisX.readBtnForward()){
+    robot.drawLine(5,5,5,10);
+  }
+}
+```
+
+#### See also
+
+-   [toStepXY()](#toStepXY)
+-   [toPositionXY()](#toPositionXY)
+
+### `drawArc()`
+
+Draws an arc with both axis of EMBRYO 2.
+
+#### Syntax
+
+```
+robot.drawArc(centerX,
+              centerY,
+              radius,
+              initialAngle,
+              finalAngle)
+```
+#### Parameters
+
+* _centerX_: X-axis coordinates of the arc center position in centimeter.
+* _centerY_: Y-axis coordinates of the arc center position in centimeter.
+* _radius_: arc radius size in centimeters.
+* _initialAngle_: initial angle of the arc.
+* _finalAngle_: initial angle of the arc.
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+
+  robot.begin();
+
+  robot.setLengthXY(45, 25);
+  
+  Serial.println("Press the Start Button to start the machine");
+  while(!robot.ready()); 
+  
+  Serial.println("Moving the robot to the initial XY position ...");
+
+  robot.toPositionXY(15, 15);
+  
+  Serial.println("Press the forward button to continue ...");
+}
+void loop() {
+  if(axisX.readBtnForward()){
+    robot.drawArc(15, 15, 5, 20, 180);
+  }
+}
+```
+
+#### See also
+
+-   [toStepXY()](#toStepXY)
+-   [drawCircle()](#drawCircle)
+
+### `drawCircle()`
+
+Draws a circle with both axis of EMBRYO 2.
+
+#### Syntax
+
+```
+robot.drawCircle(centerX,
+              centerY,
+              radius)
+```
+#### Parameters
+
+* _centerX_: X-axis coordinates of the circle center position in centimeter.
+* _centerY_: Y-axis coordinates of the circle center position in centimeter.
+* _radius_: circle radius size in centimeters.
+
+#### Example
+
+```
+#include <Arduino_EMBRYO_2.h>
+
+StepMotor axisX(1, A5, 5, 6, 3, 4, A1, A2, 2, 12);
+
+StepMotor axisY(2, A5, 10, 11, 8, 9, A3, A4, 2, 12);
+
+Embryo robot(axisX, axisY, 2, 12);
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial) {};
+
+  robot.begin();
+
+  robot.setLengthXY(45, 25);
+  
+  Serial.println("Press the Start Button to start the machine");
+  while(!robot.ready()); 
+  
+  Serial.println("Moving the robot to the initial XY position ...");
+
+  robot.toPositionXY(15, 15);
+  
+  Serial.println("Press the forward button to continue ...");
+}
+void loop() {
+  if(axisX.readBtnForward()){
+    robot.drawCircle(15, 15, 5);
+  }
+}
+```
+
+#### See also
+
+-   [toStepXY()](#toStepXY)
+-   [drawCircle()](#drawCircle)

@@ -1,6 +1,6 @@
 <!-- [![Compiling](https://github.com/arduino-libraries/Arduino_Embryo/actions/workflows/compile-examples.yml/badge.svg)](https://github.com/arduino-libraries/Arduino_Embryo/actions/workflows/compile-examples.yml) -->
 
-# embryo II
+# Arduino EMBRYO 2
 
 ## Description
 
@@ -73,7 +73,7 @@ If you want to contribute to this project:
 - Tell others about this code
 - Contribute new protocols
 
-Please read [CONTRIBUTING.md](https://github.com/AghaSaad04/EduIntro/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/arduino/EduIntro/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Credits
 
@@ -83,7 +83,7 @@ With the assistance of
 
 - P. Martinez, Malmö, 2021
 
-The modular machine design and lessons are based on the work previously done by [Nadya Peek & James Coleman]().
+The modular machine design and lessons are based on the work previously done by [Nadya Peek & James Coleman](http://infosyncratic.nl/peek-making-machines.pdf).
 
 ## License
 
