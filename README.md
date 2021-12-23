@@ -259,7 +259,7 @@ Created by F. Esquirio Torres, Malmö, 2021
 
 With the assistance of
 
-- P. Martinez, Malmö, 2021
+- P. Marquínez, Malmö, 2021
 
 The modular machine design and lessons are based on the work previously done by [Nadya Peek & James Coleman]().
 
