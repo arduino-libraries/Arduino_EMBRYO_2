@@ -6,7 +6,7 @@
 
 This library enables the user to program a state machine for EIT Manufacturing's EMBRYO 2 educational modular machine. This library contains the code to control one to several axis of the modular machine.
 
-The assembly instructions and lasercut .dxf files can be found [here]().
+The assembly instructions and lasercut .dxf files can be found on the [skills.move](https://www.skillsmove.eu/) by searching for the lesson "Assembly of linear and rotational modules".
 
 This library accompanies 5 free Arduino lessons available at [skills.move](https://www.skillsmove.eu/). The lessons are written for pupils in the ages of 14-16, and aims to introduce them to manufacturing by building their own modular machine.
 
