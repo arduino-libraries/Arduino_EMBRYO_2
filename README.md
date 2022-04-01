@@ -1,8 +1,8 @@
 <!-- [![Compiling](https://github.com/arduino-libraries/Arduino_Embryo/actions/workflows/compile-examples.yml/badge.svg)](https://github.com/arduino-libraries/Arduino_Embryo/actions/workflows/compile-examples.yml) -->
 
-***Note that this library is now archived and marked as read-only. This means that it will be no longer maintained. You are welcome to fork this repo and modify it according to your needs.***
-
 # Arduino EMBRYO 2
+
+***Note that this library is now archived and marked as read-only. This means that it will be no longer maintained. You are welcome to fork this repo and modify it according to your needs.***
 
 ## Description
 
